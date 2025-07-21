@@ -1,0 +1,46 @@
+{
+  "requirements": [
+    {
+      "clause": "Multi-Function Electronic Meters (1.20.4)",
+      "features": [
+        "True Root Mean Square (RMS) Current: per phase & neutral ±0.5%",
+        "True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%",
+        "Real Power (kW): per phase & three phase total ±0.5%",
+        "Apparent Power (kVA): per phase & three phase total ±0.5%",
+        "Reactive Power (kVAr): per phase & three phase total ±0.5%",
+        "Total Power Factor: per phase & three phase total ±0.5%",
+        "Frequency (Hz) ±0.5%",
+        "Maximum Demand Current (Id): per phase, present & peak ±0.5%",
+        "Real Power Demand (kWd): three phase total, present & peak ±0.5%",
+        "Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%",
+        "Reactive Power Demand (kVArd): three phase total ±0.5%",
+        "Real Energy (kWh): three phase total ±0.5%",
+        "Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)"
+      ],
+      "text": "Multi-function electronic meter shall be of a digital display type to measure the following electrical parameters by means of microprocessor technology\nMinimum\nFunction of Measurement\nAccuracy\nTrue Root Mean Square (RMS) Current: per phase & neutral ±0.5%\nTrue RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%\nReal Power (kW): per phase & three phase total ±0.5%\nApparent Power (kVA): per phase & three phase total ±0.5%\nReactive Power (kVAr): per phase & three phase total ±0.5%\nTotal Power Factor: per phase & three phase total ±0.5%\nFrequency (Hz) ±0.5%\nMaximum Demand Current (Id): per phase, present & peak ±0.5%\nReal Power Demand (kWd): three phase total, present & peak ±0.5%\nApparent Power Demand (kVAd): three phase total, present & peak ±0.5%\nReactive Power Demand (kVArd): three phase total ±0.5%\nReal Energy (kWh): three phase total ±0.5%\nTotal Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)"
+    },
+    {
+      "clause": "Power Quality Meters (PQM) (1.20.5)",
+      "features": [
+        "True RMS voltage (Line to Line Voltage)",
+        "True RMS voltage (Line to Neutral Voltage)",
+        "Frequency",
+        "Line and system currents",
+        "System power (active, apparent and reactive)",
+        "Peak average demand, kVA and kW",
+        "Harmonics, Vthd and Ithd and harmonic spectrum up to 50th harmonic"
+      ],
+      "text": "Where indicated on the drawings (HV/LT MSB) provide a microprocessor based DIN LCD Quality Power Meter with RS485 and/or TCP/IP communications to interface with the EMS system.\nPM denotes for HT switchboards and PQM for LV switchboards.\nAs a minimum the Meter shall provide the following information, with a minimum of 0.5% accuracy through a LCD display:\n• True RMS voltage (Line to Line Voltage)\n• True RMS voltage (Line to Neutral Voltage)\n• Frequency\n• Line and system currents\n• System power (active, apparent and reactive)\n• Peak average demand, kVA and kW\n• Harmonics, Vthd and Ithd and harmonic spectrum up to 50th harmonic"
+    },
+    {
+      "clause": "Waveforms (voltage and current) (1.20.6)",
+      "features": [
+        "Disturbance monitoring",
+        "Capture waveform on voltages and currents on trigger",
+        "Store up to 100 waveforms with a resolution from 1024 samples/cycle as a minimum"
+      ],
+      "text": "The meter shall also provide disturbance monitoring, capable of capturing waveform on voltages and currents on trigger. After a trigger the meter can store up to 100 waveforms with a resolution from 1024 samples/cycle as a minimum\nAs a minimum, the meter shall be able to provide the following functions:\n• On-board memory up to 8 GB.\n• Up to 10 programmable recordings with different start and stop time\n• provides event recording, waveform capture, waveform display, phasor diagrams, historical trending, time-of-use etc.\n• records of individual order for even and odd harmonic of voltage and current up to 50th order\n• Provide a RS485 and/or TCP/IP communication interface to the metering communication network\n• Meters shall be tested to IEC 60255 & 61000 Pt 4 & 6.\nOthers include:\na) Cross triggering. All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.\nb) Triggering shall be on both the line-to-neutral and line-to-line channels. All disturbances will result in recording of both line-to-neutral and line-to-line voltage waveforms."
+    }
+  ],
+  "text": "- True Root Mean Square (RMS) Current: per phase & neutral ±0.5%\n- True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%\n- Real Power (kW): per phase & three phase total ±0.5%\n- Apparent Power (kVA): per phase & three phase total ±0.5%\n- Reactive Power (kVAr): per phase & three phase total ±0.5%\n- Total Power Factor: per phase & three phase total ±0.5%\n- Frequency (Hz) ±0.5%\n- Maximum Demand Current (Id): per phase, present & peak ±0.5%\n- Real Power Demand (kWd): three phase total, present & peak ±0.5%\n- Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%\n- Reactive Power Demand (kVArd): three phase total ±0.5%\n- Real Energy (kWh): three phase total ±0.5%\n- Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)\n- True RMS voltage (Line to Line Voltage)\n- True RMS voltage (Line to Neutral Voltage)\n- Frequency\n- Line and system currents\n- System power (active, apparent and reactive)\n- Peak average demand, kVA and kW\n- Harmonics, Vthd and Ithd and harmonic spectrum up to 50th harmonic\n- Disturbance monitoring\n- Capture waveform on voltages and currents on trigger\n- Store up to 100 waveforms with a resolution from 1024 samples/cycle as a minimum"
+}

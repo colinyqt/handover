@@ -1,0 +1,11 @@
+streamlit
+pyyaml
+chromadb
+pandas
+numpy
+pdfplumber
+python-dotenv
+openai
+# If you use transformers or other LLM libraries, uncomment below:
+# transformers
+# Add any other dependencies your code uses

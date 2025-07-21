@@ -1,0 +1,79 @@
+name: "Dual Meter Database Test Analysis"
+description: "Test pipeline that uses both the main meters database and a secondary test meters database for rich, cross-database analysis."
+version: "1.0"
+
+inputs:
+  - name: "analysis_file"
+    type: "file"
+    description: "Tender analysis file with requirements."
+  - name: "embedding_model"
+    type: "text"
+    required: false
+    default: "C:/Users/cyqt2/Database/overhaul/jina_reranker/minilm-embedding"
+    description: "(Optional) Embedding model to use for semantic search."
+
+# Explicitly specify both databases
+# (Assume your core autodiscovery will also pick up faiss indexes for both if present)
+databases:
+  meters: "c:/Users/cyqt2/Database/overhaul/databases/meters.db"
+  test_meters: "c:/Users/cyqt2/Database/overhaul/databases/test_meters.db"
+
+processing_steps:
+  - name: "extract_clauses"
+    description: "Extract requirements from the analysis file."
+    prompt_template: |
+      Extract all key meter requirements and specifications from the following tender analysis, grouping them by clause or meter type:
+      {{ inputs.analysis_file.content }}
+      Return as JSON: {"requirements": [...], "text": "..."}
+    timeout: 60
+
+  - name: "inject_faiss_processor"
+    description: "Inject FAISSProcessor into context."
+    type: python
+    code: |
+      from faiss_processor import FAISSProcessor
+      context['faiss_processor'] = FAISSProcessor()
+
+  - name: "load_clauses_from_memory"
+    description: "Load extracted clauses and features."
+    type: python
+    dependencies: [extract_clauses]
+    code: |
+      import json
+      data = json.loads(context['dep_extract_clauses']['raw_response'])
+      result = {'clauses': data.get('requirements', [])}
+
+  - name: "llm_rich_crossdb_analysis"
+    description: "LLM step: For each clause, compare and contrast the best-fit meters from both databases, highlighting overlaps, unique features, and gaps."
+    type: llm
+    dependencies: [load_clauses_from_memory]
+    foreach: context['dep_load_clauses_from_memory']['clauses']
+    input: |
+      For the following clause, you have two meter databases: the main production meters database and a test meters database. For each, list the top 2 meters that best fit the clause requirements, and compare their features. Highlight any features present in one database but not the other, and note any gaps. Output a JSON object with keys: "clause", "main_db_top_meters", "test_db_top_meters", "overlap_features", "unique_to_main", "unique_to_test", "gaps".
+      Clause: {{item['clause']}}
+      Features: {{item['features']}}
+    output_key: crossdb_analysis
+
+  - name: "generate_rich_report"
+    description: "Generate a human-readable report summarizing the LLM's cross-database analysis."
+    type: python
+    dependencies: [llm_rich_crossdb_analysis]
+    code: |
+      results = context['dep_llm_rich_crossdb_analysis']
+      report_lines = []
+      for r in results:
+          report_lines.append(f"\n=== Clause: {r['clause']} ===\n")
+          report_lines.append(f"Main DB Top Meters: {r['main_db_top_meters']}")
+          report_lines.append(f"Test DB Top Meters: {r['test_db_top_meters']}")
+          report_lines.append(f"Overlapping Features: {r['overlap_features']}")
+          report_lines.append(f"Unique to Main DB: {r['unique_to_main']}")
+          report_lines.append(f"Unique to Test DB: {r['unique_to_test']}")
+          report_lines.append(f"Gaps: {r['gaps']}")
+          report_lines.append("")
+      result = {'report': '\n'.join(report_lines)}
+
+outputs:
+  - type: "text"
+    filename: "test_dual_meter_report_{{ timestamp }}.txt"
+    content: |
+      {{ step_results.generate_rich_report.report }}

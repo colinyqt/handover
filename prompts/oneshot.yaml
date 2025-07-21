@@ -1,0 +1,279 @@
+name: "One-Shot Clause Extraction and Best-Fit Recommendation"
+description: "Extracts clauses from a tender analysis file and runs FAISS semantic search to find the best-fit meters in a single flow."
+version: "1.0"
+
+inputs:
+  - name: "analysis_file"
+    type: "file"
+    description: "Tender analysis output file with extracted clauses and specifications"
+  - name: "embedding_model"
+    type: "text"
+    required: false
+    default: "C:/Users/cyqt2/Database/overhaul/jina_reranker/minilm-embedding"
+    description: "(Optional) Embedding model to use for semantic search. Example: './jina_reranker/minilm-embedding'. If not set, uses this default."
+
+processing_steps:
+
+  # Step 1: Extract clauses from the input file (from extract_clauses_only.yaml)
+  - name: "extract_clauses"
+    description: "Extract meter requirements from tender analysis file (grouped by clause)"
+    prompt_template: |
+      IMPORTANT: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or any text before or after the JSON. DO NOT include ```json or any explanation. Output ONLY the JSON object, starting with { and ending with }. Your output MUST be valid JSON, never truncated, and must always end with the correct number of closing brackets and braces.
+
+      Extract all key meter requirements and specifications from the following tender analysis, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
+      {{ inputs.analysis_file.content }}
+
+      Return your answer as a JSON object with:
+        - "requirements": a list of objects, one per clause, each with:
+            - "clause": the clause or meter type name
+            - "features": a list of all requirements/features for that clause
+            - "text": the full clause text (for semantic search)
+        - "text": the full extracted requirements section as a single string, including all bullet points and details (for semantic search and fallback extraction)
+
+      Example output:
+      {
+        "requirements": [
+          {
+            "clause": "Multi-Function Electronic Meters (1.20.4)",
+            "features": [
+              "True RMS Current ±0.5%",
+              "True RMS Volts ±0.5%"
+            ],
+            "text": "Full clause text here"
+          }
+        ],
+        "text": "- True RMS Current ±0.5%\n- True RMS Volts ±0.5%"
+      }
+
+      If you cannot find any requirements, return an empty list for "requirements" and an empty string for "text".
+
+      FINAL REMINDER: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or extra text. Double check that your output is never truncated and always ends with the correct number of closing brackets and braces. If you are unsure, repeat the output with all closing brackets and braces at the end.
+    timeout: 60
+
+  # Step 2: Inject FAISSProcessor into context (from faiss_clauses_bestfit.yaml)
+  - name: "inject_faiss_processor"
+    description: "Inject FAISSProcessor into the pipeline context."
+    type: python
+    code: |
+      from faiss_processor import FAISSProcessor
+      context['faiss_processor'] = FAISSProcessor()
+      print("[DEBUG] FAISSProcessor injected into context.")
+
+  # Step 3: Load clauses directly from the output of the 'extract_clauses' step
+  - name: "load_clauses_from_memory"
+    description: "Load extracted clauses and features directly from the previous step's output."
+    type: python
+    dependencies: [extract_clauses]
+    code: |
+      import json
+      import re
+
+      # The raw_response from the LLM step is a string that might contain markdown
+      raw_string = context['dep_extract_clauses']['raw_response']
+      print("Attempting to load clauses from in-memory LLM response.")
+      
+      # Clean the string: remove markdown fences and any text outside the main JSON object
+      # This regex finds the first '{' and the last '}' and everything in between.
+      json_match = re.search(r'\{.*\}', raw_string, re.DOTALL)
+
+      if json_match:
+          json_string = json_match.group(0)
+          print("[DEBUG] Extracted JSON object from raw response.")
+          try:
+              data = json.loads(json_string)
+              # The result of this step will be the parsed data
+              result = {'clauses': data.get('requirements', [])}
+              print(f"[SUCCESS] Successfully parsed JSON. Found {len(result.get('clauses', []))} clauses.")
+          except json.JSONDecodeError as e:
+              print(f"[ERROR] Failed to decode extracted JSON: {e}")
+              print(f"[DEBUG] Cleaned JSON string that failed to parse:\n{json_string}")
+              result = {'clauses': []}
+      else:
+          print("[ERROR] No JSON object found in the LLM's response.")
+          result = {'clauses': []}
+
+
+  # Step 4: Use LLM to break down features (from faiss_clauses_bestfit.yaml)
+  - name: "llm_breakdown_features"
+    description: "Use the LLM to break down each feature into atomic requirements for FAISS search."
+    type: llm
+    dependencies: [load_clauses_from_memory]
+    foreach: context['dep_load_clauses_from_memory']['clauses']
+    input: |
+      You are an expert requirements engineer. For each feature in the clause below, break it down into a list of atomic, normalized requirements suitable for semantic search in a requirements database. 
+      
+      Return ONLY a valid JSON object mapping each original feature string to a list of atomic requirements. 
+      Do not include any explanation, greeting, or extra text. 
+      If a feature is already atomic, return it as a single-item list. 
+      
+      Example output:
+      {"Feature 1": ["atomic req 1", "atomic req 2"], "Feature 2": ["atomic req 3"]}
+      
+      Clause: {{item['clause']}}
+      Features:
+      {% for feature in item['features'] %}
+      - {{feature}}
+      {% endfor %}
+    output_key: atomic_requirements_by_feature
+
+  # Step 5: Aggregate atomic requirements (from faiss_clauses_bestfit.yaml)
+  - name: "aggregate_atomic_requirements"
+    description: "Aggregate atomic requirements from all clauses into a single mapping."
+    type: python
+    dependencies: [llm_breakdown_features]
+    code: |
+      import json
+      # The result from a 'foreach' LLM step is a list of dictionaries (or strings).
+      list_of_atomic_maps = context.get('dep_llm_breakdown_features', [])
+      print(f"[DEBUG] Received list of atomic maps from LLM breakdown: {list_of_atomic_maps}")
+
+      final_atomic_map = {}
+      # The LLM is supposed to return a JSON string which gets parsed into a dict.
+      # Sometimes it might just be a dict. Handle both cases.
+      for item in list_of_atomic_maps:
+          atomic_map = {}
+          # The item could be a string (JSON) or already a dict
+          if isinstance(item, str):
+              try:
+                  # The LLM might wrap the JSON in markdown
+                  if '```json' in item:
+                      item = item.split('```json\\n', 1)[1].split('```', 1)[0]
+                  atomic_map = json.loads(item)
+              except (json.JSONDecodeError, IndexError) as e:
+                  print(f"[ERROR] Could not parse JSON from LLM breakdown output: {item}. Error: {e}")
+                  continue
+          elif isinstance(item, dict):
+              atomic_map = item
+          
+          if isinstance(atomic_map, dict):
+              final_atomic_map.update(atomic_map)
+          else:
+              print(f"[WARN] Expected a dictionary from LLM breakdown, but got {type(atomic_map)}")
+
+      if not final_atomic_map:
+          print("[WARN] The final aggregated atomic map is empty.")
+
+      print(f"[DEBUG] Aggregated atomic requirements: {final_atomic_map}")
+      result = {'atomic_requirements_by_feature': final_atomic_map}
+
+  # Step 6: Run semantic search (from faiss_clauses_bestfit.yaml)
+  - name: "faiss_semantic_search_by_clause"
+    description: "For each clause, run FAISS semantic search on each feature and aggregate meter hits using atomic requirements."
+    type: python
+    dependencies: [load_clauses_from_memory, aggregate_atomic_requirements, inject_faiss_processor]
+    code: |
+      faiss_processor = context.get('faiss_processor')
+      if not faiss_processor:
+          raise RuntimeError("FAISS processor is not available in context.")
+      results = []
+      for clause in context['dep_load_clauses_from_memory']['clauses']:
+          meter_counts = {}
+          feature_results = []
+          print(f"[DEBUG] Processing clause: {clause['clause']}")
+          atomic_map = context.get('dep_aggregate_atomic_requirements', {}).get('atomic_requirements_by_feature', {})
+          for feature in clause['features']:
+              feature_str = str(feature)
+              if feature_str not in atomic_map:
+                  print(f"[DEBUG] Feature key not found in atomic_map: {feature_str}")
+                  print(f"[DEBUG] Available keys: {list(atomic_map.keys())}")
+              atomic_reqs = atomic_map.get(feature_str)
+              if isinstance(atomic_reqs, str):
+                  atomic_reqs = [atomic_reqs]
+              elif not atomic_reqs:
+                  atomic_reqs = [feature_str]
+              all_meters = []
+              all_raw_results = []
+              for atomic in atomic_reqs:
+                  if not atomic or not str(atomic).strip():
+                      continue  # Skip empty atomic requirements
+                  print(f"[DEBUG] Querying FAISS with atomic requirement: {atomic}")
+                  faiss_results = faiss_processor.query_faiss(atomic, top_k=3)
+                  print(f"[DEBUG] FAISS results for atomic '{atomic}': {faiss_results}")
+                  for idx, r in enumerate(faiss_results):
+                      print(f"[DEBUG] Raw FAISS result {idx} for '{atomic}': {r}")
+                  meters = []
+                  for r in faiss_results:
+                      if 'meter' in r:
+                          meters.append(r['meter'])
+                      elif 'model_name' in r:
+                          meters.append(r['model_name'])
+                      elif 'metadata' in r and isinstance(r['metadata'], dict):
+                          if 'meter' in r['metadata']:
+                              meters.append(r['metadata']['meter'])
+                          elif 'model_name' in r['metadata']:
+                              meters.append(r['metadata']['model_name'])
+                  if not meters:
+                      print(f"[DEBUG] No 'meter' field found in FAISS results for '{atomic}'. Available keys: {[list(r.keys()) for r in faiss_results]}")
+                  for meter in meters:
+                      meter_counts[meter] = meter_counts.get(meter, 0) + 1
+                  all_meters.extend(meters)
+                  all_raw_results.extend(faiss_results)
+              feature_results.append({'feature': feature_str, 'atomic_requirements': atomic_reqs, 'meters': all_meters, 'raw_results': all_raw_results})
+          ranked = sorted(meter_counts.items(), key=lambda x: x[1], reverse=True)
+          top3 = [{'meter': m, 'hits': c} for m, c in ranked[:3]]
+          results.append({
+              'clause': clause['clause'],
+              'top_meters': top3,
+              'feature_results': feature_results
+          })
+      result = {'results': results}
+
+  # Step 7: Generate human-readable report from FAISS results
+  - name: "generate_meter_report"
+    description: "Generate a human-readable report summarizing the top three meters per clause, their scores, and a blurb on their shortcomings."
+    type: python
+    dependencies: [faiss_semantic_search_by_clause]
+    code: |
+      results = context['dep_faiss_semantic_search_by_clause']['results']
+      # Map clause name to full clause text for context
+      clause_text_map = {}
+      for clause_obj in context.get('dep_load_clauses_from_memory', {}).get('clauses', []):
+          if isinstance(clause_obj, dict) and 'clause' in clause_obj and 'text' in clause_obj:
+              clause_text_map[clause_obj['clause']] = clause_obj['text']
+      report_lines = []
+      for clause_result in results:
+          clause = clause_result['clause']
+          top_meters = clause_result['top_meters']
+          feature_results = clause_result['feature_results']
+          report_lines.append(f"\n=== Clause: {clause} ===\n")
+          # Add the full clause text for context if available
+          clause_text = clause_text_map.get(clause)
+          if clause_text:
+              report_lines.append(f"Clause Text:\n{clause_text}\n")
+          for idx, meter_info in enumerate(top_meters):
+              meter = meter_info['meter']
+              hits = meter_info['hits']
+              # Find all features this meter matched
+              matched_features = []
+              missed_features = []
+              for feat in feature_results:
+                  if meter in feat['meters']:
+                      matched_features.append(feat['feature'])
+                  else:
+                      missed_features.append(feat['feature'])
+              # Try to get a blurb from raw_results
+              blurb = None
+              for feat in feature_results:
+                  for r in feat['raw_results']:
+                      meta = r.get('metadata', {})
+                      if meta.get('model_name') == meter or meta.get('meter') == meter or r.get('meter') == meter:
+                          blurb = meta.get('selection_blurb')
+                          if blurb:
+                              break
+                  if blurb:
+                      break
+              report_lines.append(f"{idx+1}. {meter} (Score: {hits})")
+              if blurb:
+                  report_lines.append(f"   - Description: {blurb}")
+              if missed_features:
+                  report_lines.append(f"   - Shortcomings: Does not meet: {', '.join(missed_features)}")
+              else:
+                  report_lines.append(f"   - Shortcomings: None. Fully compliant.")
+          report_lines.append("")
+      result = {'report': '\n'.join(report_lines)}
+
+outputs:
+  - type: "text"
+    filename: "{{ inputs.analysis_file.basename }}_oneshot_bestfit_report_{{ timestamp }}.txt"
+    content: |
+      {{ step_results.generate_meter_report.report }}

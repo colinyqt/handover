@@ -1,0 +1,94 @@
+name: "Targeted Tender Analysis"
+description: "Identifies and extracts specific meter specification clauses from tender documents in a two-step process."
+
+inputs:
+  - name: "tender_document"
+    type: "file"
+    required: true
+    formats: ["txt", "pdf"]
+    description: "Tender document to analyze"
+  - name: "llm_model"
+    type: "text"
+    required: false
+    default: "qwen2.5-coder:7b-instruct"
+
+processing_steps:
+
+  - name: "identify_relevant_clause_headers"
+    description: "Scan the document and identify the exact headers of clauses that specify meter or monitoring devices, using semantic and fuzzy matching."
+    prompt_template: |
+      You are a technical document analyst. Your task is to exhaustively scan the document below and identify the exact headers of ALL clauses that define or describe an electrical metering or monitoring device, using semantic and fuzzy matching.
+
+      RELEVANCE CRITERIA:
+      - The clause title or content should name, describe, or strongly imply a metering or monitoring device, even if the wording is unusual or not in a fixed list.
+      - Examples of relevant titles include (but are not limited to): "Power Meter", "Multi-Function Meter", "Power Quality Meters (PQM)", "Digital Power Meter (DM)", "Energy Meter", "Digital Monitoring and Metering Device (DMMD)", "Digital Power Analyzer", "Power Analyzer", "Energy Analyzer", "Metering Device", "Monitoring Device", "Measurement Device", etc.
+      - Use semantic and fuzzy matching to include any clause header that refers to a device for measuring, monitoring, or analyzing electrical parameters (current, voltage, power, energy, frequency, harmonics, etc.), even if the title is not an exact match.
+      - Exclude general clauses like "General Requirements", "Testing", "Communication", or component clauses like "Current Transformers" or "Wiring."
+
+      Scan the entire document from start to finish. Return a JSON array containing the exact, complete header text (number and title) for every relevant clause you find. Do not omit any clauses that meet the criteria, even if the device name is new or phrased differently.
+
+      DOCUMENT:
+      {{ inputs.tender_document.content }}
+    timeout: 180
+
+  - name: "extract_and_analyze_clauses"
+    description: "Extract the full text of pre-identified clauses and perform a comprehensive specification analysis."
+    prompt_template: |
+      You are an expert electrical engineer specializing in tender specification analysis.
+
+      INSTRUCTIONS:
+      1.  You are provided with a complete tender document and a JSON list of relevant clause headers.
+      2.  For EACH header in the list, locate it in the document and extract the COMPLETE text of that clause, from its header to the beginning of the next clause.
+      3.  **Be aware that numbering within the document may be inconsistent** (e.g., sub-clauses may not match the main clause number). Extract all content belonging to the clause regardless of the numbering of its sub-points.
+      4.  From the extracted text, perform a comprehensive analysis to identify and list **all key technical specifications.** Do not merely fill in a fixed list; extract every specified requirement.
+      5.  Format your response as clear, structured text.
+
+      DOCUMENT CONTENT:
+      {{ inputs.tender_document.content }}
+
+      RELEVANT CLAUSE HEADERS TO EXTRACT:
+      {{ step_results.identify_relevant_clause_headers.raw_response }}
+
+      FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
+
+      ## RELEVANT CLAUSES EXTRACTED
+
+      ### [Full Clause Header from the list]
+      **Complete Clause Text:**
+      [Full clause text here - include everything from the header to the next clause, do not truncate]
+
+      **Key Specifications Identified:**
+      (List all specifications found. Look for details including, but not limited to, the examples below.)
+      - **Device Type:** [e.g., Power Quality Meter]
+      - **Accuracy Class:** [e.g., Active Energy Class 0.2S, Voltage ±0.1%]
+      - **Measured Parameters:** [e.g., V, A, Hz, Power Factor, THD, TDD]
+      - **Harmonics:** [e.g., Up to the 63rd order]
+      - **Communication:** [e.g., Modbus TCP/IP, IEC61850, SNTP sync]
+      - **Display:** [e.g., Colourful LCD graphical display]
+      - **Memory / Data Logging:** [e.g., 8GB Internal Memory, COMTRADE export]
+      - **Event & Fault Recording:** [e.g., 20µs transient capture, Sag/Swell waveform record, ITIC analysis]
+      - **Inputs/Outputs (I/O):** [e.g., 8 Digital Inputs (DI), 4 Relay Outputs (RO)]
+      - **Key Standards:** [e.g., IEC62053-22, EN50160, IEC 61000-4-5]
+      - **Environmental:** [e.g., Operating temperature -10°C to +55°C, IP52 front]
+
+      ### [Next relevant clause...]
+
+      END OF EXTRACTION
+    timeout: 300
+
+outputs:
+  - type: "text"
+    filename: "{{ inputs.tender_document.basename }}_meter_clauses_{{ timestamp }}.txt"
+    content: |
+      ================================================================================
+      TENDER ANALYSIS REPORT: METER SPECIFICATIONS
+      ================================================================================
+
+      Analysis Date: {{ timestamp }}
+      Source Document: {{ inputs.tender_document.name }}
+
+      {{ step_results.extract_and_analyze_clauses.raw_response }}
+
+      ================================================================================
+      END OF ANALYSIS
+      ================================================================================

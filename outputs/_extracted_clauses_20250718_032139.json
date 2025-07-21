@@ -1,0 +1,221 @@
+{
+  "requirements": [
+    {
+      "clause": "TVSS – Transient Voltage Surge Protection",
+      "features": [
+        "Type 1 Surge Protection dedicated for main High and low voltage switchboards.",
+        "Type 2 Surge Protection dedicated for low voltage sub-boards and distribution boards."
+      ],
+      "text": "TVSS – Transient Voltage Surge Protection\n- Type 1 Surge Protection dedicated for main High and low voltage switchboards.\n- Type 2 Surge Protection dedicated for low voltage sub-boards and distribution boards."
+    },
+    {
+      "clause": "Equipment Concurrent Maintainability",
+      "features": [
+        "Concurrent maintainability is assured at all the electrical system but not limited to the following:\n- 33kVHT Switchboards\n- 33kV/415V Transformers\n- Gensets\n- LV Switchboards\n- Uninterrupted Power Supplies, UPS\n- Busbars\n- Data hall IT loads supplies\n- Air-Con loads for Data Hall and Critical operation room\n- Security & BMS System"
+      ],
+      "text": "Equipment Concurrent Maintainability\n- Concurrent maintainability is assured at all the electrical system but not limited to the following:\n- 33kVHT Switchboards\n- 33kV/415V Transformers\n- Gensets\n- LV Switchboards\n- Uninterrupted Power Supplies, UPS\n- Busbars\n- Data hall IT loads supplies\n- Air-Con loads for Data Hall and Critical operation room\n- Security & BMS System"
+    },
+    {
+      "clause": "Fireman Switch Remote Power off systems",
+      "features": [
+        "Fireman Switch Remote Power off system shall be provided to shutdown Electrical Switchboards in the case of emergency and to comply with Local Code and Authorities Requirement."
+      ],
+      "text": "Fireman Switch Remote Power off systems\n- Fireman Switch Remote Power off system shall be provided to shutdown Electrical Switchboards in the case of emergency and to comply with Local Code and Authorities Requirement."
+    },
+    {
+      "clause": "Power Quality",
+      "features": [
+        "Power quality shall comply with IEEE 519.",
+        "Server power quality must remain within the ITIC computer power tolerance curve.",
+        "Frequency shall remain within+/-5% of nominal frequency.",
+        "Total Harmonic Voltage Distortion (THDv) shall remain below 5% VTD peak under steady state conditions.",
+        "Total Harmonic Current Distorting (THDi) shall remainbelow 5% at full load current condition."
+      ],
+      "text": "Power Quality\n- Power quality shall comply with IEEE 519.\n- Server power quality must remain within the ITIC computer power tolerance curve.\n- Frequency shall remain within+/-5% of nominal frequency.\n- Total Harmonic Voltage Distortion (THDv) shall remain below 5% VTD peak under steady state conditions.\n- Total Harmonic Current Distorting (THDi) shall remainbelow 5% at full load current condition."
+    },
+    {
+      "clause": "Power Factor",
+      "features": [
+        "Power factor must remain unity to0.85 lagging at full load operation for the building system, and IT server loads can be expected from 0.9 lagging to"
+      ],
+      "text": "Power Factor\n- Power factor must remain unity to0.85 lagging at full load operation for the building system, and IT server loads can be expected from 0.9 lagging to"
+    },
+    {
+      "clause": "Data Center IT Racks/ ELV Grounding",
+      "features": [
+        "A comprehensive grounding grid for all the data halls, MDF rooms, Meet ELV Grounding Me Rooms, ELV rooms shall generally conform to TIA 607, IEEE 1100 Chapter 8.",
+        "Clean Earth bars shall be interconnected with each other to provide redundant paths.",
+        "Clean Earth grid shall be designed to achieve a one- ohm resistance to earth."
+      ],
+      "text": "Data Center IT Racks/ ELV Grounding\n- A comprehensive grounding grid for all the data halls, MDF rooms, Meet ELV Grounding Me Rooms, ELV rooms shall generally conform to TIA 607, IEEE 1100 Chapter 8.\n- Clean Earth bars shall be interconnected with each other to provide redundant paths.\n- Clean Earth grid shall be designed to achieve a one- ohm resistance to earth."
+    },
+    {
+      "clause": "Electrical Earthing System",
+      "features": [
+        "Electrical Earthing System is designed to comply with BS7430, TN-S Earthing System.",
+        "Earthing shall be catered for all electrical and mechanical equipment, switchboards, containment & IT server racks, all exposed and extraneous conductive parts.",
+        "Electrical Earth bars shall be interconnected with each other to provide redundant paths.",
+        "Electrical Earth grid shall be designed to achieve a one- ohm resistance to earth."
+      ],
+      "text": "Electrical Earthing System\n- Electrical Earthing System is designed to comply with BS7430, TN-S Earthing System.\n- Earthing shall be catered for all electrical and mechanical equipment, switchboards, containment & IT server racks, all exposed and extraneous conductive parts.\n- Electrical Earth bars shall be interconnected with each other to provide redundant paths.\n- Electrical Earth grid shall be designed to achieve a one- ohm resistance to earth."
+    },
+    {
+      "clause": "Lightning Protection System",
+      "features": [
+        "Lightning Protection System is designed to comply with MS IEC 62305 standards.",
+        "Lightning down conductors shall be connected to structural rebars and foundation to create equipotential mesh and multiple current pathways.",
+        "LPS Earth grid shall be designed to achieve a ten - ohm resistance to earth."
+      ],
+      "text": "Lightning Protection System\n- Lightning Protection System is designed to comply with MS IEC 62305 standards.\n- Lightning down conductors shall be connected to structural rebars and foundation to create equipotential mesh and multiple current pathways.\n- LPS Earth grid shall be designed to achieve a ten - ohm resistance to earth."
+    },
+    {
+      "clause": "Monitoring Devices for Power Quality Management System",
+      "features": [
+        "The Contractor shall be responsible for all the Electrical Power Meters to be interfaced with Power Quality Monitoring System (PQMS) in accordance with the generic point schedule and tender drawings given in this Particular Specification.",
+        "All necessary interfacing works with PQMS shall be included in this Sub-contract."
+      ],
+      "text": "Monitoring Devices for Power Quality Management System\n- The Contractor shall be responsible for all the Electrical Power Meters to be interfaced with Power Quality Monitoring System (PQMS) in accordance with the generic point schedule and tender drawings given in this Particular Specification.\n- All necessary interfacing works with PQMS shall be included in this Sub-contract."
+    },
+    {
+      "clause": "High Voltage Input Side",
+      "features": [
+        "An advanced power quality meter must be used for all incoming HV and LV Switchgears compartments.",
+        "The power meter or relay has a fault recording function for fault reset; the High voltage circuit breaker should have a remote-control function."
+      ],
+      "text": "High Voltage Input Side\n- An advanced power quality meter must be used for all incoming HV and LV Switchgears compartments.\n- The power meter or relay has a fault recording function for fault reset; the High voltage circuit breaker should have a remote-control function."
+    },
+    {
+      "clause": "Low-Voltage Input Side",
+      "features": [
+        "A high-precision meter and power quality must be used on the low-voltage input side.",
+        "An automatic switching device must be installed on the low-voltage busbar connected to the two sections."
+      ],
+      "text": "Low-Voltage Input Side\n- A high-precision meter and power quality must be used on the low-voltage input side.\n- An automatic switching device must be installed on the low-voltage busbar connected to the two sections."
+    },
+    {
+      "clause": "Measuring Point Requirements",
+      "features": [
+        "Power distribution system to all the outgoing loads from Main Switchboards: switch status, current, voltage, active power, power factor, harmonic content, IT power consumption, data centre power consumption to derive the PUE.",
+        "Bus-bar tap-off units for IT Loads: switch status, current, voltage, active power, power factor, IT power consumption, data centre power consumption to derive the PUE.",
+        "The power distribution cabinet must have the function of monitoring and recording the maximum current of the previous day, which is used for the investigation of the over-power of the cabinet.",
+        "Diesel generator system: fuel tank oil level or oil quantity display, diesel engine speed, output power, frequency, voltage, power factor, monitoring of air valve sampling points between diesel generators.",
+        "Uninterruptible power supply system: input and output power, voltage, frequency, current, power factor, load rate; battery input voltage, current, capacity; synchronous/non-synchronous state, uninterrupted voltage system/bypass power supply state, mains failure, UPS power supply system failure status."
+      ],
+      "text": "Measuring Point Requirements\n- Power distribution system to all the outgoing loads from Main Switchboards: switch status, current, voltage, active power, power factor, harmonic content, IT power consumption, data centre power consumption to derive the PUE.\n- Bus-bar tap-off units for IT Loads: switch status, current, voltage, active power, power factor, IT power consumption, data centre power consumption to derive the PUE.\n- The power distribution cabinet must have the function of monitoring and recording the maximum current of the previous day, which is used for the investigation of the over-power of the cabinet.\n- Diesel generator system: fuel tank oil level or oil quantity display, diesel engine speed, output power, frequency, voltage, power factor, monitoring of air valve sampling points between diesel generators.\n- Uninterruptible power supply system: input and output power, voltage, frequency, current, power factor, load rate; battery input voltage, current, capacity; synchronous/non-synchronous state, uninterrupted voltage system/bypass power supply state, mains failure, UPS power supply system failure status."
+    },
+    {
+      "clause": "Other Requirements",
+      "features": [
+        "Self-maintaining: When the monitoring system fails, the controlled equipment shall not be affected; when control system fails, equipment shall remain at the last control command.",
+        "Network Time Protocol (NTP): protection and backup automatic switching devices, diesel generator parallel machines, low-voltage backup automatic switching devices, power distribution cabinets, UPS, battery monitoring and other major equipment need to have the NTP protocol for time synchronization with server time."
+      ],
+      "text": "Other Requirements\n- Self-maintaining: When the monitoring system fails, the controlled equipment shall not be affected; when control system fails, equipment shall remain at the last control command.\n- Network Time Protocol (NTP): protection and backup automatic switching devices, diesel generator parallel machines, low-voltage backup automatic switching devices, power distribution cabinets, UPS, battery monitoring and other major equipment need to have the NTP protocol for time synchronization with server time."
+    },
+    {
+      "clause": "Standby Automatic Switching System",
+      "features": [
+        "External power monitoring: The main controller connects to the relay through dry contacts or communication methods to monitor the voltage and current of the external power (if any phase has no voltage, the main controller considers it to be no voltage).",
+        "Circuit breaker monitoring: dry contact or communication methods, respectively monitor the local remote status, open status, closing status, and fault status of the five automatic switching cabinets (both the open status and the closing status are monitored).",
+        "Opening and closing output: realize the opening and closing control of incoming line cabinets, bus coupler cabinets, and all feeder cabinets through dry contacts or communication methods, and feeder cabinets.",
+        "Selection of the main controller: The main controller of the standby automatic switch can be a PLC or a relay protection device."
+      ],
+      "text": "Standby Automatic Switching System\n- External power monitoring: The main controller connects to the relay through dry contacts or communication methods to monitor the voltage and current of the external power (if any phase has no voltage, the main controller considers it to be no voltage).\n- Circuit breaker monitoring: dry contact or communication methods, respectively monitor the local remote status, open status, closing status, and fault status of the five automatic switching cabinets (both the open status and the closing status are monitored).\n- Opening and closing output: realize the opening and closing control of incoming line cabinets, bus coupler cabinets, and all feeder cabinets through dry contacts or communication methods, and feeder cabinets.\n- Selection of the main controller: The main controller of the standby automatic switch can be a PLC or a relay protection device."
+    },
+    {
+      "clause": "Power Quality Meter Specifications",
+      "features": [
+        "The proposed meter shall comply with IEC62053 class 0.2S or compliance with SAC-SINGLAS certification with passed with accuracy class of 0.2 standard.",
+        "The communication to BMS system shall be via Modbus TCP/IP connection."
+      ],
+      "text": "Power Quality Meter Specifications\n- The proposed meter shall comply with IEC62053 class 0.2S or compliance with SAC-SINGLAS certification with passed with accuracy class of 0.2 standard.\n- The communication to BMS system shall be via Modbus TCP/IP connection."
+    },
+    {
+      "clause": "General Specification",
+      "features": [
+        "Class A Power Analyser",
+        "Monitoring the quality in accordance with DIN EN 50160",
+        "Measurement accuracy according to IEC62053-22 Cl 0.2S"
+      ],
+      "text": "General Specification\n- Class A Power Analyser\n- Monitoring the quality in accordance with DIN EN 50160\n- Measurement accuracy according to IEC62053-22 Cl 0.2S"
+    },
+    {
+      "clause": "Accuracy",
+      "features": [
+        "Voltage / Current ±0.1%",
+        "Active Power ±0.2%",
+        "Reactive Power ±0.2%"
+      ],
+      "text": "Accuracy\n- Voltage / Current ±0.1%\n- Active Power ±0.2%\n- Reactive Power ±0.2%"
+    },
+    {
+      "clause": "Electromagnetic Emission",
+      "features": [
+        "Dielectric strength - 2kV voltage, 1 minute",
+        "Insulation resistance - no less than 100M"
+      ],
+      "text": "Electromagnetic Emission\n- Dielectric strength - 2kV voltage, 1 minute\n- Insulation resistance - no less than 100M"
+    },
+    {
+      "clause": "Certifications",
+      "features": [
+        "All the meter’s accuracy shall be complied with IEC62053-22 with 3rd party lab certification"
+      ],
+      "text": "Certifications\n- All the meter’s accuracy shall be complied with IEC62053-22 with 3rd party lab certification"
+    },
+    {
+      "clause": "Digital Power Meter Specifications",
+      "features": [
+        "The proposed meter shall comply with IEC62053 class 0.5S or compliance with SAC-SINGLAS certification with passed with accuracy class of 0.2 standard."
+      ],
+      "text": "Digital Power Meter Specifications\n- The proposed meter shall comply with IEC62053 class 0.5S or compliance with SAC-SINGLAS certification with passed with accuracy class of 0.2 standard."
+    },
+    {
+      "clause": "General Specification",
+      "features": [
+        "Measurement accuracy according to IEC62053-22 Cl 0.5S"
+      ],
+      "text": "General Specification\n- Measurement accuracy according to IEC62053-22 Cl 0.5S"
+    },
+    {
+      "clause": "Accuracy",
+      "features": [
+        "Apparent power 0.5%",
+        "Reactive power 1%"
+      ],
+      "text": "Accuracy\n- Apparent power 0.5%\n- Reactive power 1%"
+    },
+    {
+      "clause": "Electromagnetic Emission",
+      "features": [
+        "Electrostatic Discharge - IEC 61000-4-2"
+      ],
+      "text": "Electromagnetic Emission\n- Electrostatic Discharge - IEC 61000-4-2"
+    },
+    {
+      "clause": "Certifications",
+      "features": [
+        "All the meter’s accuracy shall be comply with IEC62053-22 with 3rd party lab certifications"
+      ],
+      "text": "Certifications\n- All the meter’s accuracy shall be comply with IEC62053-22 with 3rd party lab certifications"
+    },
+    {
+      "clause": "Integrated Building Management System and Interfaces",
+      "features": [
+        "The Contractor shall be responsible for all the Electrical Equipment to be interfaced with Integrated Building Management System including Power Quality Monitoring System (PQMS) in accordance with the generic point schedule given in this Particular Specification."
+      ],
+      "text": "Integrated Building Management System and Interfaces\n- The Contractor shall be responsible for all the Electrical Equipment to be interfaced with Integrated Building Management System including Power Quality Monitoring System (PQMS) in accordance with the generic point schedule given in this Particular Specification."
+    },
+    {
+      "clause": "Leak Detection System",
+      "features": [
+        "Fuel leak detection provision at\na) Fuel pump room\nb) Genset enclosures\nc) Underground fuel tank enclosures\nd) Day tank Fuel Storage enclosures"
+      ],
+      "text": "Leak Detection System\n- Fuel leak detection provision at\na) Fuel pump room\nb) Genset enclosures\nc) Underground fuel tank enclosures\nd) Day tank Fuel Storage enclosures"
+    },
+    {
+      "clause": "Electrical Power Monitoring System (EPMS)",
+      "features": [
+        "The High voltage input side needs to be equipped with an advanced power quality meter, and the power meter or relay has a fault recording function for fault reset; the High voltage circuit breaker should have a remote-control function.",
+        "A high-precision meter and power quality must be used on the low-voltage input side, and an automatic switching device must be installed on the low-voltage busbar connected to the two sections."
+      ],
+      "text": "Electrical Power Monitoring System (EPMS)\n- The High voltage input side needs to be equipped with an advanced power quality meter, and the power meter or relay has a fault recording function for fault reset; the High voltage circuit

@@ -1,0 +1,55 @@
+name: "Extract Clauses Only"
+description: "Extract meter requirements from tender analysis file (grouped by clause) only."
+version: "1.0"
+
+inputs:
+  - name: "analysis_file"
+    type: "file"
+    description: "Tender analysis output file with extracted clauses and specifications"
+  - name: "embedding_model"
+    type: "text"
+    required: false
+    default: "C:/Users/cyqt2/Database/overhaul/jina_reranker/minilm-embedding"
+    description: "(Optional) Embedding model to use for semantic search. Example: './jina_reranker/minilm-embedding'. If not set, uses this default."
+
+processing_steps:
+  - name: "extract_clauses"
+    description: "Extract meter requirements from tender analysis file (grouped by clause)"
+    prompt_template: |
+      IMPORTANT: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or any text before or after the JSON. DO NOT include ```json or any explanation. Output ONLY the JSON object, starting with { and ending with }. Your output MUST be valid JSON, never truncated, and must always end with the correct number of closing brackets and braces.
+
+      Extract all key meter requirements and specifications from the following tender analysis, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
+      {{ inputs.analysis_file.content }}
+
+      Return your answer as a JSON object with:
+        - "requirements": a list of objects, one per clause, each with:
+            - "clause": the clause number and name
+            - "features": a list of all requirements/features for that clause
+            - "text": the full clause text (for semantic search)
+        - "text": the full extracted requirements section as a single string, including all bullet points and details (for semantic search and fallback extraction)
+
+      Example output:
+      {
+        "requirements": [
+          {
+            "clause": "Multi-Function Electronic Meters (1.20.4)",
+            "features": [
+              "True RMS Current ±0.5%",
+              "True RMS Volts ±0.5%"
+            ],
+            "text": "Full clause text here"
+          }
+        ],
+        "text": "- True RMS Current ±0.5%\n- True RMS Volts ±0.5%"
+      }
+
+      If you cannot find any requirements, return an empty list for "requirements" and an empty string for "text".
+
+      FINAL REMINDER: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or extra text. Double check that your output is never truncated and always ends with the correct number of closing brackets and braces. If you are unsure, repeat the output with all closing brackets and braces at the end.
+    timeout: 60
+
+outputs:
+  - type: "text"
+    filename: "{{ inputs.analysis_file.basename }}_extracted_clauses_{{ timestamp }}.json"
+    content: |
+      {{ step_results.extract_clauses.raw_response }}

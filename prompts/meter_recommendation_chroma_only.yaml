@@ -1,0 +1,149 @@
+name: "Chroma-Only Meter Recommendation"
+description: "Recommend meters using only ChromaDB semantic search (no LlamaIndex/SQL)."
+version: "1.0"
+
+inputs:
+  - name: "analysis_file"
+    type: "file"
+    description: "Tender analysis output file with extracted clauses and specifications"
+  - name: "embedding_model"
+    type: "text"
+    required: false
+    default: "C:/Users/cyqt2/Database/overhaul/jina_reranker/minilm-embedding"
+    description: "(Optional) Embedding model to use for semantic search. Example: './jina_reranker/minilm-embedding'. If not set, uses this default."
+
+chroma_collections:
+  meters_semantic: 'C:\Users\cyqt2\Database\overhaul\chroma_db\meters'
+
+processing_steps:
+  - name: "extract_clauses"
+    description: "Extract meter requirements from tender analysis file (grouped by clause)"
+    prompt_template: |
+      Extract all key meter requirements and specifications from the following tender analysis, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
+      {{ inputs.analysis_file.content }}
+
+      Return your answer as a JSON object with:
+        - "requirements": a list of objects, one per clause, each with:
+            - "clause": the clause or meter type name
+            - "features": a list of all requirements/features for that clause
+            - "text": the full clause text (for semantic search)
+        - "text": the full extracted requirements section as a single string, including all bullet points and details (for semantic search and fallback extraction)
+
+      Example output:
+      {{ '{' }}
+        "requirements": [
+          {
+            "clause": "Multi-Function Electronic Meters (1.20.4)",
+            "features": [
+              "True RMS Current ±0.5%",
+              "True RMS Volts ±0.5%",
+              ...
+            ],
+            "text": "Full clause text here"
+          },
+          ...
+        ],
+        "text": "- True RMS Current ±0.5%\n- True RMS Volts ±0.5%\n..."
+      {{ '}' }}
+
+      If you cannot find any requirements, return an empty list for "requirements" and an empty string for "text".
+    timeout: 60
+
+  - name: "chroma_semantic_search"
+    description: "Use ChromaDB semantic search to find matching meters (by clause)"
+    type: "chroma"
+    collection: "meters_semantic"
+    dependencies: ["extract_clauses"]
+    prompt_template: |
+      For each clause below, perform a semantic search for the most relevant meters:
+      {% for clause in step_results.extract_clauses.requirements %}
+      CLAUSE: {{ clause.clause }}
+      FEATURES:
+      {% for f in clause.features %}- {{ f }}
+      {% endfor %}
+      TEXT: {{ clause.text }}
+      {% endfor %}
+      Return the top 10 most relevant meters for each clause (for reranking).
+    search_params:
+      n_results: 3
+      include_metadata: true
+      include_distances: true
+    timeout: 90
+
+  - name: "rerank_semantic_results"
+    description: "Rerank the semantic search results using local cross-encoder (by clause)."
+    type: "reranker"
+    model: "./jina_reranker/cross-encoder"
+    dependencies: ["chroma_semantic_search"]
+    prompt_template: |
+      For each clause, rerank the top 10 semantic search results using the local cross-encoder model. Return the top 3 most relevant meters for each clause after reranking.
+    timeout: 60
+
+  - name: "generate_compliance_report"
+    description: "Generates a highly readable, clause-based compliance report using real candidate meter data."
+    dependencies: ["extract_clauses", "rerank_semantic_results"]
+    prompt_template: |
+      You are a technical compliance analyst. Your task is to create a highly readable, professional, and visually organized compliance report comparing tender requirements (grouped by clause) against product specifications.
+
+      Here are the extracted meter requirements (JSON, grouped by clause):
+      {{ step_results.extract_clauses.raw_response }}
+
+      Here are the reranked candidate meters for each clause (JSON):
+      {{ step_results.rerank_semantic_results.results | tojson(indent=2) }}
+
+      For each clause:
+        - Show the clause title and all features.
+        - If reranked candidate meters are available for this clause, generate a compliance table for each top candidate meter, comparing all features in the clause to the meter's product specifications (from the reranker output).
+        - If no matching product is found, still generate a section for this clause with:
+          - "Recommended Model: No suitable product found"
+          - "Overall Compliance: Needs further review"
+          - A table with the requirements and "Info not available" for product specs, marked as ⚠️ Needs Verification.
+
+      ---
+      **TENDER REQUIREMENTS SECTION:**
+      - Summarize all key requirements for each meter type (clause) in a compact, readable table/list format, using clear section dividers (e.g., lines of dashes or box-drawing characters).
+      - Use short, aligned labels and group related specs together for each meter type.
+
+      ---
+      **RECOMMENDATION & COMPLIANCE TABLE SECTION:**
+      - For each clause, use a section divider and show:
+        - Recommended Model(s) (from the reranked candidates, e.g., use the product name or model number from the candidate's metadata if available)
+        - Overall Compliance (one-line summary)
+        - A table with columns: Feature | Tender Requirement | Product Specification | Compliance
+        - Use monospace or fixed-width alignment for columns, and emoji for compliance (✅, ⚠️, ❌)
+        - If data is missing, state "Info not available" and mark as ⚠️ Needs Verification
+
+      ---
+      For each clause, for each top reranked candidate meter, output:
+      - The model name (from candidate metadata, e.g., model_name, product_type, series_name)
+      - A compliance table for that meter, showing how its specs match all features in the clause
+      If multiple meters are relevant, output a separate table for each.
+
+      ---
+      If no suitable product is found for a clause, output a section as described above.
+
+      ---
+      **END OF REPORT**
+    timeout: 180
+
+outputs:
+  - type: "text"
+    filename: "{{ inputs.analysis_file.basename }}_chroma_recommendations_{{ timestamp }}.txt"
+    content: |
+      ================================================================================
+      CHROMA-ONLY METER RECOMMENDATION REPORT
+      ================================================================================
+      Document: {{ inputs.analysis_file.name }}
+      Analysis Date: {{ timestamp }}
+      Engine: ChromaDB Semantic Search Only
+      ================================================================================
+      TENDER REQUIREMENTS
+      ================================================================================
+      {{ step_results.extract_clauses.raw_response }}
+      ================================================================================
+      SEMANTIC SEARCH RECOMMENDATIONS
+      ================================================================================
+      {{ step_results.generate_compliance_report.raw_response }}
+      ================================================================================
+      END OF REPORT
+      ================================================================================

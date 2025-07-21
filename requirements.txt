@@ -1,0 +1,47 @@
+# Core Python libraries
+numpy
+pandas
+scikit-learn
+scipy
+
+# FAISS for semantic search
+faiss-cpu
+
+# LLM and NLP
+transformers
+sentence-transformers
+
+# YAML and config
+pyyaml
+
+# SQLite and database
+sqlalchemy
+sqlite-utils
+
+# Jina Embedding (if using Jina models)
+jina
+
+# Streamlit for UI (if using streamlit_app.py)
+streamlit
+
+# For PDF and document handling
+pdfplumber
+PyPDF2
+python-docx
+
+# For image/vision models (if using moondream:v2 or similar)
+pillow
+opencv-python
+
+# For generic HTTP and file operations
+requests
+tqdm
+
+# For code execution and safe eval (if needed)
+restrictedpython
+
+# For compatibility and utility
+regex
+
+# Optional: For testing
+pytest

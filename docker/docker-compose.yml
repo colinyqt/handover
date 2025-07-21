@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    # depends_on:
+    #   - chromadb
+    #   - ollama
+    # Uncomment and configure as needed

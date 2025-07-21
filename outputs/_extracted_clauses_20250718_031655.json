@@ -1,0 +1,28 @@
+{
+  "requirements": [
+    {
+      "clause": "1 General",
+      "features": [
+        "The purpose of the document is to outline the general requirements, performance, design criteria, testing & commissioning requirement for Electrical Monitoring System (EMS)."
+      ],
+      "text": "1 General\n1. The purpose of the document is to outline the general requirements, performance, design criteria, testing & commissioning requirement for Electrical Monitoring System (EMS)."
+    },
+    {
+      "clause": "2 Requirements & Recommendations",
+      "features": [
+        "The complete system shall meet the following minimum performance criteria but not limited to.",
+        "A change to the present value of any tag associated with trending, alarming or graphics within the system shall be able to be recorded on a historical trend, annunciate as an alarm condition or displayed on the human machine interface no more than 2 seconds after the change has occurred."
+      ],
+      "text": "2 Requirements & Recommendations\nThis Section defines the minimum design requirement for EMS. The complete system shall meet the following minimum performance criteria but not limited to.\nA change to the present value of any tag associated with trending, alarming or graphics within the system shall be able to be recorded on a historical trend, annunciate as an alarm condition or displayed on the human machine interface no more than 2 seconds after the change has occurred."
+    },
+    {
+      "clause": "3 Testing & Commissioning",
+      "features": [
+        "The complete EMS system shall be subject to 100% factory testing procedures at the vendors works.",
+        "All equipment including outstations, controllers, networking, IO, servers and workstations shall be connected in the intended configuration to be used on site, with suitable lengths of fibre-optic cable to simulate the site communication links."
+      ],
+      "text": "3 Testing & Commissioning\n3.1 Factory Testing\n1. The complete EMS system shall be subject to 100% factory testing procedures at the vendors works.\n2. All equipment including outstations, controllers, networking, IO, servers and workstations shall be connected in the intended configuration to be used on site, with suitable lengths of fibre-optic cable to simulate the site communication links."
+    }
+  ],
+  "text": "1 General\n1. The purpose of the document is to outline the general requirements, performance, design criteria, testing & commissioning requirement for Electrical Monitoring System (EMS).\n2 Requirements & Recommendations\nThis Section defines the minimum design requirement for EMS. The complete system shall meet the following minimum performance criteria but not limited to.\nA change to the present value of any tag associated with trending, alarming or graphics within the system shall be able to be recorded on a historical trend, annunciate as an alarm condition or displayed on the human machine interface no more than 2 seconds after the change has occurred.\n3 Testing & Commissioning\n3.1 Factory Testing\n1. The complete EMS system shall be subject to 100% factory testing procedures at the vendors works.\n2. All equipment including outstations, controllers, networking, IO, servers and workstations shall be connected in the intended configuration to be used on site, with suitable lengths of fibre-optic cable to simulate the site communication links."
+}

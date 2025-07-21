@@ -1,0 +1,80 @@
+# BMS Point List Extraction from Building Drawings
+# This prompt is designed to analyze building drawings (PDF, image, or text) and generate a structured BMS (Building Management System) point list.
+# It uses the moondream:v2 model from Ollama for vision and language understanding.
+
+name: "BMS Point List Extraction from Drawings"
+description: "Analyzes building drawings and generates a structured BMS point list using moondream:v2."
+version: "1.0"
+
+inputs:
+  - name: "drawing_file"
+    type: "file"
+    description: "Building drawing file (PDF, image, or text) to analyze."
+  - name: "llm_model"
+    type: "text"
+    required: false
+    default: "ollama:moondream:v2"
+    description: "LLM model to use for vision and language analysis. Default is moondream:v2."
+
+processing_steps:
+  - name: "extract_bms_points"
+    description: "Extract BMS points from the uploaded building drawing using moondream:v2."
+    type: llm
+    input: |
+      You are a building automation and controls expert. Analyze the following building drawing and extract a structured BMS (Building Management System) point list. Each point should include:
+        - Point Name
+        - Description (if available)
+        - System/Subsystem (e.g., HVAC, Lighting, Fire, Security, etc.)
+        - Location/Zone (if available)
+        - Data Type (Analog, Digital, etc. if available)
+        - Units (if available)
+        - Any relevant notes or tags
+      
+      If the drawing contains tables or legends, use them to improve accuracy. If the drawing is an image, use OCR and visual context. If the drawing is a PDF, extract all relevant information from all pages.
+      
+      Output ONLY a valid JSON array of BMS points, e.g.:
+      [
+        {
+          "point_name": "Room Temp Sensor 1",
+          "description": "Temperature sensor in Meeting Room 101",
+          "system": "HVAC",
+          "location": "Meeting Room 101",
+          "data_type": "Analog",
+          "units": "°C",
+          "notes": "Mounted on north wall"
+        },
+        ...
+      ]
+      
+      Drawing file: {{ inputs.drawing_file.content }}
+
+  - name: "generate_pointlist_report"
+    description: "Generate a human-readable BMS point list report."
+    type: python
+    dependencies: [extract_bms_points]
+    code: |
+      points = context['dep_extract_bms_points']
+      if isinstance(points, str):
+          import json
+          try:
+              points = json.loads(points)
+          except Exception:
+              points = []
+      report_lines = []
+      report_lines.append("BMS Point List Report\n====================\n")
+      if not points:
+          report_lines.append("No BMS points found.")
+      else:
+          for idx, pt in enumerate(points):
+              report_lines.append(f"{idx+1}. {pt.get('point_name', 'N/A')}")
+              for k, v in pt.items():
+                  if k != 'point_name':
+                      report_lines.append(f"    {k.replace('_', ' ').capitalize()}: {v}")
+              report_lines.append("")
+      context['report'] = '\n'.join(report_lines)
+
+outputs:
+  - type: "text"
+    filename: "bms_pointlist_report_{{ timestamp }}.txt"
+    content: |
+      {{ step_results.generate_pointlist_report.report }}

@@ -10,43 +10,65 @@ inputs:
   - name: "drawing_file"
     type: "file"
     description: "Building drawing file (PDF, image, or text) to analyze."
+  - name: "image_file"
+    type: "file"
+    required: false
+    description: "Optional: Directly provide an image file (PNG, JPG) for moondream vision model. If provided, this will be used instead of converting a PDF."
   - name: "llm_model"
     type: "text"
     required: false
-    default: "ollama:moondream:v2"
+    default: "moondream:v2"
     description: "LLM model to use for vision and language analysis. Default is moondream:v2."
 
 processing_steps:
+  - name: "convert_pdf_to_image_if_needed"
+    description: "Convert PDF drawing to image if needed for vision-language model."
+    type: python
+    code: |
+      import mimetypes
+      from pathlib import Path
+      # Prefer image_file if provided
+      image_file = context['inputs'].get('image_file')
+      if image_file:
+          image_path = image_file['path'] if isinstance(image_file, dict) and 'path' in image_file else image_file if isinstance(image_file, str) else None
+          if not image_path:
+              raise RuntimeError('image_file path could not be resolved. Pipeline cannot continue.')
+          print(f"[DEBUG] Using direct image_file for moondream: {image_path}")
+          context['drawing_image_path'] = image_path
+      else:
+          if 'inputs' not in context or 'drawing_file' not in context['inputs']:
+              raise RuntimeError('No drawing_file provided in inputs. Pipeline cannot continue.')
+          drawing_file = context['inputs']['drawing_file']
+          drawing_path = drawing_file['path'] if isinstance(drawing_file, dict) and 'path' in drawing_file else drawing_file if isinstance(drawing_file, str) else None
+          print(f"[DEBUG] PDF-to-image step: using drawing_path={drawing_path}")
+          llm_model = context['inputs'].get('llm_model', '')
+          result_path = drawing_path
+          if not drawing_path:
+              raise RuntimeError('drawing_file path could not be resolved. Pipeline cannot continue.')
+          if llm_model and 'moondream' in llm_model.lower():
+              mime, _ = mimetypes.guess_type(drawing_path)
+              if mime == 'application/pdf' or str(drawing_path).lower().endswith('.pdf'):
+                  try:
+                      import fitz  # PyMuPDF
+                      doc = fitz.open(drawing_path)
+                      page = doc.load_page(0)  # first page
+                      pix = page.get_pixmap()
+                      out_path = str(Path(drawing_path).with_suffix('.png'))
+                      pix.save(out_path)
+                      print(f"[INFO] Converted PDF to image: {out_path}")
+                      result_path = out_path
+                  except Exception as e:
+                      print(f"[ERROR] PDF to image conversion failed: {e}")
+          context['drawing_image_path'] = result_path
   - name: "extract_bms_points"
     description: "Extract BMS points from the uploaded building drawing using moondream:v2."
     type: llm
+    dependencies: [convert_pdf_to_image_if_needed]
     input: |
-      You are a building automation and controls expert. Analyze the following building drawing and extract a structured BMS (Building Management System) point list. Each point should include:
-        - Point Name
-        - Description (if available)
-        - System/Subsystem (e.g., HVAC, Lighting, Fire, Security, etc.)
-        - Location/Zone (if available)
-        - Data Type (Analog, Digital, etc. if available)
-        - Units (if available)
-        - Any relevant notes or tags
-      
-      If the drawing contains tables or legends, use them to improve accuracy. If the drawing is an image, use OCR and visual context. If the drawing is a PDF, extract all relevant information from all pages.
-      
-      Output ONLY a valid JSON array of BMS points, e.g.:
-      [
-        {
-          "point_name": "Room Temp Sensor 1",
-          "description": "Temperature sensor in Meeting Room 101",
-          "system": "HVAC",
-          "location": "Meeting Room 101",
-          "data_type": "Analog",
-          "units": "°C",
-          "notes": "Mounted on north wall"
-        },
-        ...
-      ]
-      
-      Drawing file: {{ inputs.drawing_file.content }}
+      You are a building automation and controls expert. Analyze the following building drawing.
+      Output the number of MCB (Mini Circuit Breaker) found and the number of MCCB found
+
+      Drawing file path: {{ context['drawing_image_path'] }}
 
   - name: "generate_pointlist_report"
     description: "Generate a human-readable BMS point list report."
@@ -54,23 +76,35 @@ processing_steps:
     dependencies: [extract_bms_points]
     code: |
       points = context['dep_extract_bms_points']
+      import json
+      count = 0
+      # Try to parse points if it's a string
       if isinstance(points, str):
-          import json
           try:
-              points = json.loads(points)
+              parsed = json.loads(points)
+              if isinstance(parsed, list):
+                  count = len(parsed)
+              elif isinstance(parsed, dict):
+                  count = 1
+              else:
+                  # Try to extract a count from the string if possible
+                  import re
+                  match = re.search(r'(\d+)', points)
+                  if match:
+                      count = int(match.group(1))
           except Exception:
-              points = []
+              # Try to extract a count from the string if possible
+              import re
+              match = re.search(r'(\d+)', points)
+              if match:
+                  count = int(match.group(1))
+      elif isinstance(points, list):
+          count = len(points)
+      elif isinstance(points, dict):
+          count = 1
       report_lines = []
       report_lines.append("BMS Point List Report\n====================\n")
-      if not points:
-          report_lines.append("No BMS points found.")
-      else:
-          for idx, pt in enumerate(points):
-              report_lines.append(f"{idx+1}. {pt.get('point_name', 'N/A')}")
-              for k, v in pt.items():
-                  if k != 'point_name':
-                      report_lines.append(f"    {k.replace('_', ' ').capitalize()}: {v}")
-              report_lines.append("")
+      report_lines.append(f"Total BMS points found: {count}")
       context['report'] = '\n'.join(report_lines)
 
 outputs:

@@ -359,6 +359,8 @@ class PromptEngine:
                     raise ValueError(f"Required input '{input_name}' not provided")
                 if file_path and Path(file_path).exists():
                     file_data = self.file_processor.process_file(file_path)
+                    # Always pass as dict with 'path' key for pipeline compatibility
+                    file_data['path'] = str(file_path)
                     input_data[input_name] = file_data
                     print(f"Processed {input_name}: {len(file_data['content'])} characters")
                 elif required:
@@ -466,6 +468,19 @@ class PromptEngine:
                 if dep in results:
                     step_context[f"dep_{dep}"] = results[dep]
 
+            # For LLM steps, inject drawing_image_path from context if present and attach image for vision models
+            image_bytes = None
+            if step_type == "llm":
+                if 'drawing_image_path' in context:
+                    step_context['drawing_image_path'] = context['drawing_image_path']
+                    llm_model_val = step.get('llm_model') or step_context.get('llm_model', '')
+                    image_path = context['drawing_image_path']
+                    if llm_model_val and 'moondream' in llm_model_val.lower() and image_path and Path(image_path).exists():
+                        try:
+                            with open(image_path, 'rb') as f:
+                                image_bytes = f.read()
+                        except Exception as e:
+                            print(f"[ERROR] Could not read image for vision model: {e}")
             # Remove ChromaDB semantic search step: FAISS only
 
             # Force breakdown=True for any LLM step named 'llm_breakdown_features'
@@ -605,11 +620,76 @@ class PromptEngine:
                 results[step_name] = step_result
                 continue
 
+            # PATCH: foreach support for LLM steps
+            if step_type == "llm" and 'foreach' in step and step['foreach']:
+                print("[PATCH ACTIVE] Foreach logic for LLM step triggered.")
+                foreach_expr = step['foreach']
+                # Try to resolve context['...'] expressions manually
+                foreach_items = None
+                if isinstance(foreach_expr, str) and foreach_expr.startswith('context['):
+                    import re
+                    m = re.match(r"context\['([^']+)'\](?:\['([^']+)'\])?", foreach_expr)
+                    foreach_items = None
+                    if m:
+                        key1 = m.group(1)
+                        key2 = m.group(2)
+                        val = None
+                        # Direct, explicit resolution order
+                        if key1 in step_context:
+                            val = step_context[key1]
+                        elif key1 in context:
+                            val = context[key1]
+                        elif 'inputs' in context and key1 in context['inputs']:
+                            val = context['inputs'][key1]
+                        elif key1 in results:
+                            val = results[key1]
+                        else:
+                            raise KeyError(f"foreach: Could not resolve key '{key1}' in step_context, context, inputs, or results.")
+                        print(f"[DEBUG] foreach key1: {key1}, resolved value type: {type(val)}")
+                        if key2 and isinstance(val, dict):
+                            foreach_items = val.get(key2)
+                        else:
+                            foreach_items = val
+                    else:
+                        foreach_items = eval(foreach_expr, {}, context)
+                elif isinstance(foreach_expr, str):
+                    foreach_items = eval(foreach_expr, {}, context)
+                else:
+                    foreach_items = foreach_expr
+                if not isinstance(foreach_items, list):
+                    print(f"[ERROR] foreach items is not a list: {type(foreach_items)}. Value: {repr(foreach_items)[:200]}")
+                    foreach_items = []
+                results_list = []
+                for idx, item in enumerate(foreach_items):
+                    # PATCH: Ensure passthrough logic matches test_prompt_engine_foreach.py
+                    item_context = step_context.copy()
+                    item_context['item'] = item
+                    # If item is a dict, also inject its keys for template access
+                    if isinstance(item, dict):
+                        item_context.update(item)
+                    print(f"[DEBUG] foreach item {idx}: type={type(item)}, value={repr(item)[:200]}")
+                    prompt_template = step.get('input', '')
+                    template = self.jinja_env.from_string(prompt_template)
+                    rendered_prompt = template.render(**item_context)
+                    print(f"[DEBUG] LLM foreach prompt for item {idx}: {repr(rendered_prompt)[:200]}")
+                    if image_bytes:
+                        step_result = await self.llm_processor.process_prompt(rendered_prompt, timeout, images=[image_bytes])
+                    else:
+                        step_result = await self.llm_processor.process_prompt(rendered_prompt, timeout)
+                    print(f"[DEBUG] LLM response for chunk {idx}: {repr(step_result)[:200]}")
+                    results_list.append(step_result)
+                results[step_name] = results_list
+                continue
+
             # Default: LLM step
             print(f"[DEBUG] _execute_pipeline: defaulting to LLM step for {step_name}")
             template = self.jinja_env.from_string(prompt_template)
             rendered_prompt = template.render(**step_context)
-            step_result = await self.llm_processor.process_prompt(rendered_prompt, timeout)
+            # If image_bytes is set, pass it to the LLM processor
+            if image_bytes:
+                step_result = await self.llm_processor.process_prompt(rendered_prompt, timeout, images=[image_bytes])
+            else:
+                step_result = await self.llm_processor.process_prompt(rendered_prompt, timeout)
             results[step_name] = step_result
 
         return results

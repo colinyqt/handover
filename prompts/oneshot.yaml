@@ -13,15 +13,50 @@ inputs:
     description: "(Optional) Embedding model to use for semantic search. Example: './jina_reranker/minilm-embedding'. If not set, uses this default."
 
 processing_steps:
+  # Step 0: Chunk the analysis file into smaller pieces for LLM clause extraction
+  - name: "chunk_analysis_file"
+    description: "Chunk the analysis file into smaller pieces to avoid LLM context limits."
+    type: python
+    code: |
+      import re
+      content = context['inputs']['analysis_file']['content']
+      # Simple chunking: split by section/clause headers, keeping the header
+      # with the following chunk. This is done using a positive lookahead `(?=...)`.
+      # This ensures each chunk (except the first) starts with its clause header,
+      # providing necessary context for the LLM.
+      chunks = re.split(r'(?=(?:Section \d+[A-Z]?|Clause \d+(?:\.\d+)*))', content)
+      # If not enough chunks, fallback to fixed-size chunks
+      if len(chunks) < 2:
+          chunk_size = 8000
+          chunks = [content[i:i+chunk_size] for i in range(0, len(content), chunk_size)]
+      # Remove empty or whitespace-only chunks
+      chunks = [c.strip() for c in chunks if c.strip()]
+      print(f"[DEBUG] Chunked analysis file into {len(chunks)} pieces.")
+      result = {'chunks': chunks}
 
-  # Step 1: Extract clauses from the input file (from extract_clauses_only.yaml)
+  # Step 0b: Debug - Show exactly what is passed to the LLM foreach step
+  - name: "debug_show_chunks_for_llm"
+    description: "Display exactly what is passed to the LLM foreach step, including type and content."
+    type: python
+    dependencies: [chunk_analysis_file]
+    code: |
+      chunks = context['dep_chunk_analysis_file']['chunks']
+      print("[DEBUG] Chunks to be passed to LLM foreach step:")
+      for idx, chunk in enumerate(chunks):
+          print(f"[CHUNK {idx}] type={type(chunk)} length={len(chunk)}\n{repr(chunk)[:500]}")
+      result = {'chunks': chunks}
+
+  # Step 1: Extract clauses from each chunk (chunked clause extraction)
   - name: "extract_clauses"
-    description: "Extract meter requirements from tender analysis file (grouped by clause)"
-    prompt_template: |
+    description: "Extract meter requirements from each chunk of the analysis file (grouped by clause)"
+    type: llm
+    dependencies: [chunk_analysis_file]
+    foreach: context['chunk_analysis_file']['chunks']
+    input: |
       IMPORTANT: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or any text before or after the JSON. DO NOT include ```json or any explanation. Output ONLY the JSON object, starting with { and ending with }. Your output MUST be valid JSON, never truncated, and must always end with the correct number of closing brackets and braces.
 
-      Extract all key meter requirements and specifications from the following tender analysis, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
-      {{ inputs.analysis_file.content }}
+      Extract all key meter requirements and specifications from the following tender analysis chunk, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
+      {{item}}
 
       Return your answer as a JSON object with:
         - "requirements": a list of objects, one per clause, each with:
@@ -48,6 +83,7 @@ processing_steps:
       If you cannot find any requirements, return an empty list for "requirements" and an empty string for "text".
 
       FINAL REMINDER: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or extra text. Double check that your output is never truncated and always ends with the correct number of closing brackets and braces. If you are unsure, repeat the output with all closing brackets and braces at the end.
+    output_key: chunked_clauses
     timeout: 60
 
   # Step 2: Inject FAISSProcessor into context (from faiss_clauses_bestfit.yaml)
@@ -59,38 +95,62 @@ processing_steps:
       context['faiss_processor'] = FAISSProcessor()
       print("[DEBUG] FAISSProcessor injected into context.")
 
-  # Step 3: Load clauses directly from the output of the 'extract_clauses' step
+  # Step 3: Load clauses from all chunked LLM outputs
   - name: "load_clauses_from_memory"
-    description: "Load extracted clauses and features directly from the previous step's output."
+    description: "Load extracted clauses and features from all chunked LLM outputs."
     type: python
     dependencies: [extract_clauses]
     code: |
       import json
       import re
+      chunked_outputs = context.get('dep_extract_clauses', [])
+      clause_map = {}
+      for raw in chunked_outputs:
+          # Accept both dict and string outputs from LLM step
+          if isinstance(raw, dict) and 'raw_response' in raw:
+              raw_string = raw['raw_response']
+          elif isinstance(raw, str):
+              raw_string = raw
+          else:
+              raw_string = str(raw)
 
-      # The raw_response from the LLM step is a string that might contain markdown
-      raw_string = context['dep_extract_clauses']['raw_response']
-      print("Attempting to load clauses from in-memory LLM response.")
-      
-      # Clean the string: remove markdown fences and any text outside the main JSON object
-      # This regex finds the first '{' and the last '}' and everything in between.
-      json_match = re.search(r'\{.*\}', raw_string, re.DOTALL)
-
-      if json_match:
-          json_string = json_match.group(0)
-          print("[DEBUG] Extracted JSON object from raw response.")
+          # Remove any markdown code fences and extra text
+          # Accept output that is either a valid JSON string or a dict
+          # Try direct JSON parse first
+          data = None
           try:
-              data = json.loads(json_string)
-              # The result of this step will be the parsed data
-              result = {'clauses': data.get('requirements', [])}
-              print(f"[SUCCESS] Successfully parsed JSON. Found {len(result.get('clauses', []))} clauses.")
-          except json.JSONDecodeError as e:
-              print(f"[ERROR] Failed to decode extracted JSON: {e}")
-              print(f"[DEBUG] Cleaned JSON string that failed to parse:\n{json_string}")
-              result = {'clauses': []}
-      else:
-          print("[ERROR] No JSON object found in the LLM's response.")
-          result = {'clauses': []}
+              data = json.loads(raw_string)
+          except Exception:
+              # If not valid JSON, try to extract JSON object from string
+              json_match = re.search(r'\{.*\}', raw_string, re.DOTALL)
+              if json_match:
+                  json_string = json_match.group(0)
+                  try:
+                      data = json.loads(json_string)
+                  except Exception:
+                      data = None
+          if isinstance(data, dict):
+              chunk_clauses = data.get('requirements', [])
+              if isinstance(chunk_clauses, list):
+                  for clause in chunk_clauses:
+                      name = clause.get('clause')
+                      if not name:
+                          continue
+                      if name not in clause_map:
+                          clause_map[name] = {'features': set(), 'text': []}
+                      clause_map[name]['features'].update(clause.get('features', []))
+                      if clause.get('text'):
+                          clause_map[name]['text'].append(clause['text'])
+          # If data is not a dict, skip this chunk
+      # Final output: deduplicated and merged clauses
+      deduped_clauses = []
+      for name, data in clause_map.items():
+          deduped_clauses.append({
+              'clause': name,
+              'features': list(data['features']),
+              'text': '\n'.join(data['text'])
+          })
+      result = {'clauses': deduped_clauses}
 
 
   # Step 4: Use LLM to break down features (from faiss_clauses_bestfit.yaml)
@@ -98,7 +158,7 @@ processing_steps:
     description: "Use the LLM to break down each feature into atomic requirements for FAISS search."
     type: llm
     dependencies: [load_clauses_from_memory]
-    foreach: context['dep_load_clauses_from_memory']['clauses']
+    foreach: context['load_clauses_from_memory']['clauses']
     input: |
       You are an expert requirements engineer. For each feature in the clause below, break it down into a list of atomic, normalized requirements suitable for semantic search in a requirements database. 
       

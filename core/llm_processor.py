@@ -16,6 +16,14 @@ class LLMProcessor:
         import datetime
         try:
             import ollama
+        except ImportError:
+            print("[LLM] Ollama not available, using mock response")
+            return {
+                'raw_response': f"Mock response for prompt: {prompt[:100]}...",
+                'parsed_result': {"mock": True, "message": "Ollama not available"},
+                'success': True
+            }
+        try:
             orig_feature = None
             if breakdown:
                 feature_text = prompt.strip()
@@ -67,13 +75,6 @@ class LLMProcessor:
             return {
                 'raw_response': ai_content,
                 'parsed_result': json_result,
-                'success': True
-            }
-        except ImportError:
-            print("[LLM] Ollama not available, using mock response")
-            return {
-                'raw_response': f"Mock response for prompt: {prompt[:100]}...",
-                'parsed_result': {"mock": True, "message": "Ollama not available"},
                 'success': True
             }
         except Exception as e:

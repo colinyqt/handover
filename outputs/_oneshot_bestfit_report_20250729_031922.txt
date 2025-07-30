@@ -1,0 +1,57 @@
+=== Clause: 1.20 METERS AND INSTRUMENTS ===
+
+Requirements:
+- Accuracy Class 0.5
+- All terminals completely insulated
+- Potential circuits suitably fused
+- All meters and instruments fully tropicalised
+- Flush pattern meters with square escutcheon plates finished matt black
+- Small wiring enclosed in flexible plastic conduit
+- Removable or hinged covers with dust exclusion gaskets
+- Protective instruments with provision for locking
+- Meter/instruments mounted on vibration absorbing material
+- Instruments, meters and relays positioned adjacent to associated units
+- Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication
+- Ammeters with selector switches for indication of all phase currents
+- Direct reading kWh meter
+- Meter panels hinged for ready access
+- Scale of length 90 degrees with external zero adjustment
+- Integrating meters complying with BS 5685
+- Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5760 |   2   | 2/17 (11%) | The PM5760 combines advanced power quality analysis with residual current measurement. It includes sag/swell detection, waveform capture, and two RCM inputs, providing a comprehensive solution for critical facilities that need to monitor both power quality and potential equipment insulation issues.
+  Acti9 iEM3255 |   2   | 2/17 (11%) | The iEM3255 is a current transformer (CT) connected energy meter offering high accuracy (Class 0.5S) for billing applications. It provides four-quadrant energy measurement, a digital I/O, multi-tariff functions, and Modbus communication, making it ideal for monitoring mains or critical feeders in low and medium voltage networks.
+  PowerLogic PM5310 |   2   | 2/17 (11%) | The PM5310 offers Class 0.5S accuracy with a serial communication port and one digital output, making it a reliable choice for basic energy monitoring applications that require integration into a Modbus serial network.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5760  | Acti9 iEM3255      | PowerLogic PM5310  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Accuracy Class 0.5                                           |      ✖        |      ✔        |      ✔        |
+| All terminals completely insulated                           |      ✔        |      ✖        |      ✔        |
+| Potential circuits suitably fused                            |      ✔        |      ✔        |      ✖        |
+| All meters and instruments fully tropicalised                |      ✖        |      ✖        |      ✖        |
+| Flush pattern meters with square escutcheon plates finish... |      ✖        |      ✖        |      ✖        |
+| Small wiring enclosed in flexible plastic conduit            |      ✖        |      ✖        |      ✖        |
+| Removable or hinged covers with dust exclusion gaskets       |      ✖        |      ✖        |      ✖        |
+| Protective instruments with provision for locking            |      ✖        |      ✖        |      ✖        |
+| Meter/instruments mounted on vibration absorbing material    |      ✖        |      ✖        |      ✖        |
+| Instruments, meters and relays positioned adjacent to ass... |      ✖        |      ✖        |      ✖        |
+| Voltmeters with selector switches for phase-to-phase and ... |      ✖        |      ✖        |      ✖        |
+| Ammeters with selector switches for indication of all pha... |      ✖        |      ✖        |      ✖        |
+| Direct reading kWh meter                                     |      ✖        |      ✖        |      ✖        |
+| Meter panels hinged for ready access                         |      ✖        |      ✖        |      ✖        |
+| Scale of length 90 degrees with external zero adjustment     |      ✖        |      ✖        |      ✖        |
+| Integrating meters complying with BS 5685                    |      ✖        |      ✖        |      ✖        |
+| Indicating instruments complying with IEC 60051, IEC 6101... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5760: Missing [Accuracy Class 0.5, All meters and instruments fully tropicalised, Flush pattern meters with square escutcheon plates finished matt black, Small wiring enclosed in flexible plastic conduit, Removable or hinged covers with dust exclusion gaskets, Protective instruments with provision for locking, Meter/instruments mounted on vibration absorbing material, Instruments, meters and relays positioned adjacent to associated units, Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication, Ammeters with selector switches for indication of all phase currents, Direct reading kWh meter, Meter panels hinged for ready access, Scale of length 90 degrees with external zero adjustment, Integrating meters complying with BS 5685, Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529]
+- Acti9 iEM3255: Missing [All terminals completely insulated, All meters and instruments fully tropicalised, Flush pattern meters with square escutcheon plates finished matt black, Small wiring enclosed in flexible plastic conduit, Removable or hinged covers with dust exclusion gaskets, Protective instruments with provision for locking, Meter/instruments mounted on vibration absorbing material, Instruments, meters and relays positioned adjacent to associated units, Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication, Ammeters with selector switches for indication of all phase currents, Direct reading kWh meter, Meter panels hinged for ready access, Scale of length 90 degrees with external zero adjustment, Integrating meters complying with BS 5685, Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529]
+- PowerLogic PM5310: Missing [Potential circuits suitably fused, All meters and instruments fully tropicalised, Flush pattern meters with square escutcheon plates finished matt black, Small wiring enclosed in flexible plastic conduit, Removable or hinged covers with dust exclusion gaskets, Protective instruments with provision for locking, Meter/instruments mounted on vibration absorbing material, Instruments, meters and relays positioned adjacent to associated units, Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication, Ammeters with selector switches for indication of all phase currents, Direct reading kWh meter, Meter panels hinged for ready access, Scale of length 90 degrees with external zero adjustment, Integrating meters complying with BS 5685, Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529]
+
+Recommendation:
+- Best-fit: PowerLogic PM5760 (score: 2)
+  Consider relaxing: [Accuracy Class 0.5, All meters and instruments fully tropicalised, Flush pattern meters with square escutcheon plates finished matt black, Small wiring enclosed in flexible plastic conduit, Removable or hinged covers with dust exclusion gaskets, Protective instruments with provision for locking, Meter/instruments mounted on vibration absorbing material, Instruments, meters and relays positioned adjacent to associated units, Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication, Ammeters with selector switches for indication of all phase currents, Direct reading kWh meter, Meter panels hinged for ready access, Scale of length 90 degrees with external zero adjustment, Integrating meters complying with BS 5685, Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529]

@@ -1,0 +1,65 @@
+=== Clause: Multi-Function Electronic Meters ===
+
+Requirements (condensed):
+- Accuracy classes: ±0.5%
+- Current ranges: Accepts current inputs from standard measuring current transformers with rated secondary current of 5A
+- Memory / logging capacity: Sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months
+- Voltage ranges: 400V/230V
+- Communication interface: RS485, RJ45 or similar socket and plug as Approved
+- Harmonic order limits: Total Harmonic Distortion (THD): per phase, voltage & current (at least up to 31st harmonic order)
+- Frequency range: 50Hz
+- Sampling or waveform resolution: Not specified in the text
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3155 |   2   | 2/8 (25%)  | The iEM3155 is a versatile 63A direct-measure energy meter featuring four-quadrant energy measurement, multi-tariff capabilities, and a programmable digital I/O. With its integrated Modbus communication, it is designed for cost allocation and network monitoring within a larger energy management system.
+  EasyLogic PM2230 |   2   | 2/8 (25%)  | The PM2230 is the premium model in the series, ideal for critical applications such as sub-billing and advanced power quality analysis. It should be selected when the highest accuracy (Class 0.5S) , detailed harmonic analysis (up to 31st) , data logging, alarming, multi-tariff functions , and I/O expandability  are required.
+  PowerLogic PM8310 |   2   | 2/8 (25%)  | The PM8310 is the low-voltage DC variant of the Advanced power meter. It provides the highest sampling rate and Class A power quality analysis for critical applications, and is designed for systems with a 20-60 V DC control power supply.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | Acti9 iEM3155      | EasyLogic PM2230   | PowerLogic PM8310  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Accuracy classes: ±0.5%                                      |      ✔        |      ✔        |      ✔        |
+| Current ranges: Accepts current inputs from standard meas... |      ✔        |      ✔        |      ✔        |
+| Memory / logging capacity: Sufficient built-in memory cap... |      ✖        |      ✖        |      ✖        |
+| Voltage ranges: 400V/230V                                    |      ✖        |      ✖        |      ✖        |
+| Communication interface: RS485, RJ45 or similar socket an... |      ✖        |      ✖        |      ✖        |
+| Harmonic order limits: Total Harmonic Distortion (THD): p... |      ✖        |      ✖        |      ✖        |
+| Frequency range: 50Hz                                        |      ✖        |      ✖        |      ✖        |
+| Sampling or waveform resolution: Not specified in the text   |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3155: Missing [Memory / logging capacity: Sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months, Voltage ranges: 400V/230V, Communication interface: RS485, RJ45 or similar socket and plug as Approved, Harmonic order limits: Total Harmonic Distortion (THD): per phase, voltage & current (at least up to 31st harmonic order), Frequency range: 50Hz, Sampling or waveform resolution: Not specified in the text]
+- EasyLogic PM2230: Missing [Memory / logging capacity: Sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months, Voltage ranges: 400V/230V, Communication interface: RS485, RJ45 or similar socket and plug as Approved, Harmonic order limits: Total Harmonic Distortion (THD): per phase, voltage & current (at least up to 31st harmonic order), Frequency range: 50Hz, Sampling or waveform resolution: Not specified in the text]
+- PowerLogic PM8310: Missing [Memory / logging capacity: Sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months, Voltage ranges: 400V/230V, Communication interface: RS485, RJ45 or similar socket and plug as Approved, Harmonic order limits: Total Harmonic Distortion (THD): per phase, voltage & current (at least up to 31st harmonic order), Frequency range: 50Hz, Sampling or waveform resolution: Not specified in the text]
+
+Recommendation:
+- Best-fit: Acti9 iEM3155 (score: 2)
+  Consider relaxing: [Memory / logging capacity: Sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months, Voltage ranges: 400V/230V, Communication interface: RS485, RJ45 or similar socket and plug as Approved, Harmonic order limits: Total Harmonic Distortion (THD): per phase, voltage & current (at least up to 31st harmonic order), Frequency range: 50Hz, Sampling or waveform resolution: Not specified in the text]
+
+
+=== Clause: Waveform Storage and Resolution ===
+
+Requirements (condensed):
+- Minimum resolution of 1024 samples/cycle for waveforms
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  EasyLogic PM2110 |   1   | 1/1 (100%) | Choose the PM2110 for cost-effective, basic energy monitoring with a clear LED display. It is ideal for standalone applications where remote data access is not required beyond a simple pulse output for energy totalizing.
+  PowerLogic PM8340 |   1   | 1/1 (100%) | The PM8340 is an advanced power quality meter featuring a high-resolution color display, 512 MB of memory, and a high sampling rate of 512 samples/cycle for detailed analysis. It provides Class A power quality measurement and is suitable for billing and network management in large buildings, data centers, and industrial settings.
+  PowerLogic PM5650 |   1   | 1/1 (100%) | The PM5650 builds on the PM5560 by adding advanced power quality functions, including sag/swell detection and waveform capture. This makes it suitable for applications where monitoring power quality disturbances is necessary in addition to energy management.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | EasyLogic PM2110   | PowerLogic PM8340  | PowerLogic PM5650  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Minimum resolution of 1024 samples/cycle for waveforms       |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- EasyLogic PM2110: None. Fully compliant.
+- PowerLogic PM8340: None. Fully compliant.
+- PowerLogic PM5650: None. Fully compliant.
+
+Recommendation:
+- Best-fit: EasyLogic PM2110 (fully compliant)

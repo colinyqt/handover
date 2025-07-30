@@ -1,0 +1,74 @@
+=== Clause: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES ===
+
+Requirements:
+- Current transformer secondary 5A
+- Frequency ±0.5%
+- Voltage range 400V/230V
+- Total Harmonic Distortion (THD) up to 31st harmonic order ±1%
+- Accuracy class 0.5
+- RS485 communication interface
+- Operating temperature up to 50°C
+- Memory capacity for 36 months data
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3255 |   3   | 3/8 (37%)  | The iEM3255 is a current transformer (CT) connected energy meter offering high accuracy (Class 0.5S) for billing applications. It provides four-quadrant energy measurement, a digital I/O, multi-tariff functions, and Modbus communication, making it ideal for monitoring mains or critical feeders in low and medium voltage networks.
+  PowerLogic PM8310 |   3   | 3/8 (37%)  | The PM8310 is the low-voltage DC variant of the Advanced power meter. It provides the highest sampling rate and Class A power quality analysis for critical applications, and is designed for systems with a 20-60 V DC control power supply.
+  PowerLogic PM5760 |   2   | 2/8 (25%)  | The PM5760 combines advanced power quality analysis with residual current measurement. It includes sag/swell detection, waveform capture, and two RCM inputs, providing a comprehensive solution for critical facilities that need to monitor both power quality and potential equipment insulation issues.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | Acti9 iEM3255      | PowerLogic PM8310  | PowerLogic PM5760  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Current transformer secondary 5A                             |      ✔        |      ✔        |      ✔        |
+| Frequency ±0.5%                                              |      ✔        |      ✔        |      ✖        |
+| Voltage range 400V/230V                                      |      ✔        |      ✔        |      ✔        |
+| Total Harmonic Distortion (THD) up to 31st harmonic order... |      ✖        |      ✖        |      ✖        |
+| Accuracy class 0.5                                           |      ✖        |      ✖        |      ✖        |
+| RS485 communication interface                                |      ✖        |      ✖        |      ✖        |
+| Operating temperature up to 50°C                             |      ✖        |      ✖        |      ✖        |
+| Memory capacity for 36 months data                           |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3255: Missing [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Accuracy class 0.5, RS485 communication interface, Operating temperature up to 50°C, Memory capacity for 36 months data]
+- PowerLogic PM8310: Missing [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Accuracy class 0.5, RS485 communication interface, Operating temperature up to 50°C, Memory capacity for 36 months data]
+- PowerLogic PM5760: Missing [Frequency ±0.5%, Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Accuracy class 0.5, RS485 communication interface, Operating temperature up to 50°C, Memory capacity for 36 months data]
+
+Recommendation:
+- Best-fit: Acti9 iEM3255 (score: 3)
+  Consider relaxing: [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Accuracy class 0.5, RS485 communication interface, Operating temperature up to 50°C, Memory capacity for 36 months data]
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data, with user-defined durations
+- Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Records both waveforms and rms plots for rms disturbances
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5760 |   3   | 3/5 (60%)  | The PM5760 combines advanced power quality analysis with residual current measurement. It includes sag/swell detection, waveform capture, and two RCM inputs, providing a comprehensive solution for critical facilities that need to monitor both power quality and potential equipment insulation issues.
+  PowerLogic PM5560 |   3   | 3/5 (60%)  | The PM5560 is a high-accuracy power meter designed for comprehensive energy and cost management. It features a full range of measurements, including harmonics up to the 63rd, extensive data logging capabilities, and multiple communication protocols including Modbus TCP and BACnet/IP.
+  PowerLogic ION9000T |   3   | 3/5 (60%)  | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5760  | PowerLogic PM5560  | PowerLogic ION9000T |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Triggers on one-cycle or longer variations in the rms vol... |      ✔        |      ✔        |      ✔        |
+| Stores a trend plot of the rms voltage during the disturb... |      ✔        |      ✔        |      ✔        |
+| Stores actual waveforms (voltage and current) during the ... |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✖        |      ✖        |      ✖        |
+| Records both waveforms and rms plots for rms disturbances    |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5760: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Records both waveforms and rms plots for rms disturbances]
+- PowerLogic PM5560: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Records both waveforms and rms plots for rms disturbances]
+- PowerLogic ION9000T: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Records both waveforms and rms plots for rms disturbances]
+
+Recommendation:
+- Best-fit: PowerLogic PM5760 (score: 3)
+  Consider relaxing: [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Records both waveforms and rms plots for rms disturbances]

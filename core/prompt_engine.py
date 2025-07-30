@@ -15,7 +15,6 @@ from .template_analyzer import TemplateAnalyzer
 from .file_processor import FileProcessor
 from .llm_processor import LLMProcessor
 from .excel_generator import ExcelGenerator
-from .llamaindex_query_engine import LlamaIndexQueryEngine
 
 # Load environment variables from .env file
 load_dotenv()
@@ -144,8 +143,6 @@ class PromptEngine:
         
         # New: Initialize LlamaIndex query engines
         self.llamaindex_engines = {}
-        
-        # FAISS only: Remove Chroma processor
         
         print("Prompt engine components initialized")
     
@@ -556,6 +553,13 @@ class PromptEngine:
                     reranker = CrossEncoder(model_name)
                     faiss_results = results[step['dependencies'][0]]
                     print(f"[DEBUG] FAISS results for reranker: {faiss_results}")
+                    # PATCH: If faiss_results is a list, skip reranking and pass through
+                    if isinstance(faiss_results, list):
+                        print("[PATCH] FAISS results is a list, skipping reranking and passing through.")
+                        step_result = {'success': True, 'results': faiss_results}
+                        results[step_name] = step_result
+                        continue
+                    # If faiss_results is a dict with 'results', rerank as before
                     reranked_results = {}
                     for req, candidates in faiss_results.get('results', {}).items():
                         if not candidates:

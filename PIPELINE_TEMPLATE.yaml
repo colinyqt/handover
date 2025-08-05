@@ -1,0 +1,366 @@
+# Pipeline Configuration Template
+# This template shows all supported YAML pipeline features and configuration options
+# Copy and modify this template to create your own custom pipelines
+
+---
+name: "Pipeline Name Here"
+description: "Brief description of what this pipeline does"
+version: "1.0"  # Optional: Version tracking
+
+# =============================================================================
+# INPUT DEFINITIONS
+# Define all inputs that the pipeline expects
+# =============================================================================
+inputs:
+  # File input - for documents, CSVs, etc.
+  - name: "input_file"
+    type: "file"
+    description: "Description of what file is expected"
+    required: true  # Optional: defaults to true
+    
+  # Text input - for strings, paths, parameters
+  - name: "text_parameter"
+    type: "text" 
+    description: "Description of the text parameter"
+    required: false
+    default: "default_value"  # Optional: default value if not provided
+    
+  # Optional inputs for advanced features
+  - name: "optional_config"
+    type: "text"
+    required: false
+    description: "Optional configuration parameter"
+
+# =============================================================================
+# PROCESSING STEPS
+# Define the sequence of operations the pipeline will perform
+# =============================================================================
+processing_steps:
+
+  # ---------------------------------------------------------------------------
+  # PYTHON STEP - Execute custom Python code
+  # ---------------------------------------------------------------------------
+  - name: "python_processing_step"
+    description: "Description of what this step does"
+    type: python
+    dependencies: []  # Optional: list of step names this depends on
+    code: |
+      # Python code goes here
+      # Access inputs via: context['inputs']['input_name']
+      # Access previous step results via: context['dep_step_name']
+      
+      import json
+      import re
+      # Add any imports you need
+      
+      # Example: Process input file
+      content = context['inputs']['input_file']['content']
+      
+      # Your processing logic here
+      processed_data = content.upper()  # Example transformation
+      
+      # Always set result - this becomes available to dependent steps
+      result = {'processed_content': processed_data, 'metadata': {'step': 'python_processing'}}
+
+  # ---------------------------------------------------------------------------
+  # LLM STEP - Use Large Language Model for text processing
+  # ---------------------------------------------------------------------------
+  - name: "llm_analysis_step"
+    description: "Use LLM to analyze or transform text"
+    type: llm
+    dependencies: [python_processing_step]  # This step depends on the previous one
+    
+    # Optional: Process each item in a list individually
+    foreach: dep_python_processing_step['some_list']  # Reference to list from previous step
+    
+    # Optional: Code to run before processing each item
+    pre_hook: |
+      print(f"[DEBUG] Processing item: {item}")
+    
+    # The prompt sent to the LLM
+    input: |
+      System message: You are an expert analyst.
+      
+      Task: Analyze the following content and extract key information.
+      
+      Instructions:
+      - Be precise and thorough
+      - Return valid JSON format
+      - Include confidence scores
+      
+      Content to analyze:
+      {{context['dep_python_processing_step']['processed_content']}}
+      
+      # If using foreach, access current item with:
+      # {{item}}
+      
+      Return format:
+      {
+        "analysis": "your analysis here",
+        "confidence": 0.95,
+        "key_points": ["point1", "point2", "point3"]
+      }
+    
+    output_key: analysis_results  # Optional: key name for storing results
+    timeout: 120  # Optional: timeout in seconds (default: 60)
+
+  # ---------------------------------------------------------------------------
+  # LLM STEP WITH ADVANCED FEATURES
+  # ---------------------------------------------------------------------------
+  - name: "advanced_llm_step"
+    description: "LLM step with advanced configuration options"
+    type: llm
+    dependencies: [llm_analysis_step]
+    
+    # Process multiple items from previous steps
+    foreach: dep_llm_analysis_step  # Can reference the entire result list
+    
+    # Advanced pre-hook with conditional logic
+    pre_hook: |
+      if isinstance(item, dict) and 'analysis' in item:
+          print(f"[DEBUG] Processing analysis: {item['analysis'][:50]}...")
+      else:
+          print(f"[DEBUG] Processing item of type: {type(item)}")
+    
+    # Complex prompt with templating
+    input: |
+      Role: You are a technical specification expert.
+      
+      Context: Previous analysis found: {{item['analysis'] if item is mapping else item}}
+      
+      Task: Extract technical requirements with the following criteria:
+      - Must be measurable or quantifiable
+      - Must include tolerances where applicable
+      - Must reference standards (IEC, IEEE, etc.) if mentioned
+      
+      {% if context.get('inputs', {}).get('text_parameter') %}
+      Additional context: {{context['inputs']['text_parameter']}}
+      {% endif %}
+      
+      Output format (strict JSON):
+      {
+        "requirements": [
+          {
+            "requirement": "specific requirement text",
+            "type": "measurement|standard|protocol|feature",
+            "value": "numeric value if applicable",
+            "tolerance": "tolerance if applicable",
+            "standard": "referenced standard if applicable"
+          }
+        ],
+        "metadata": {
+          "total_found": 0,
+          "confidence": 0.0
+        }
+      }
+      
+      Text to process:
+      {{item}}
+    
+    output_key: extracted_requirements
+    timeout: 180
+
+  # ---------------------------------------------------------------------------
+  # RERANKER STEP - Use cross-encoder for result reranking
+  # ---------------------------------------------------------------------------
+  - name: "rerank_results"
+    description: "Rerank search results using cross-encoder for better relevance"
+    type: reranker
+    dependencies: [advanced_llm_step]
+    # Note: Reranker steps are handled automatically by the prompt engine
+    # No additional code needed - the engine will use available reranking models
+
+  # ---------------------------------------------------------------------------
+  # PYTHON STEP WITH DEPENDENCIES - Aggregate and process multiple inputs
+  # ---------------------------------------------------------------------------
+  - name: "aggregate_results"
+    description: "Combine and process results from multiple previous steps"
+    type: python
+    dependencies: [advanced_llm_step, rerank_results]  # Multiple dependencies
+    code: |
+      import json
+      from collections import defaultdict
+      
+      # Access multiple previous steps
+      llm_results = context.get('dep_advanced_llm_step', [])
+      reranked_results = context.get('dep_rerank_results', {})
+      
+      # Also access original inputs if needed
+      original_file = context['inputs']['input_file']['basename']
+      
+      # Aggregation logic
+      aggregated_data = defaultdict(list)
+      
+      for item in llm_results:
+          if isinstance(item, dict) and 'raw_response' in item:
+              try:
+                  parsed = json.loads(item['raw_response'])
+                  if 'requirements' in parsed:
+                      aggregated_data['all_requirements'].extend(parsed['requirements'])
+              except json.JSONDecodeError as e:
+                  print(f"[WARN] Could not parse JSON: {e}")
+      
+      # Process reranked results if available
+      if reranked_results and 'results' in reranked_results:
+          aggregated_data['reranked'] = reranked_results['results']
+      
+      # Create final output
+      result = {
+          'total_requirements': len(aggregated_data['all_requirements']),
+          'requirements_by_type': {},
+          'source_file': original_file,
+          'processing_metadata': {
+              'steps_completed': ['python_processing_step', 'llm_analysis_step', 'advanced_llm_step'],
+              'timestamp': '{{ timestamp }}'  # Special template variable
+          }
+      }
+      
+      # Group requirements by type
+      for req in aggregated_data['all_requirements']:
+          req_type = req.get('type', 'unknown')
+          if req_type not in result['requirements_by_type']:
+              result['requirements_by_type'][req_type] = []
+          result['requirements_by_type'][req_type].append(req)
+
+  # ---------------------------------------------------------------------------
+  # FINAL PROCESSING STEP - Generate output
+  # ---------------------------------------------------------------------------
+  - name: "generate_final_output"
+    description: "Generate the final formatted output"
+    type: python
+    dependencies: [aggregate_results]
+    code: |
+      # Access all previous results
+      aggregated = context['dep_aggregate_results']
+      
+      # Generate formatted report
+      report_lines = []
+      report_lines.append("=== PIPELINE PROCESSING REPORT ===\n")
+      report_lines.append(f"Source File: {aggregated['source_file']}")
+      report_lines.append(f"Total Requirements Found: {aggregated['total_requirements']}")
+      report_lines.append(f"Processing Timestamp: {aggregated['processing_metadata']['timestamp']}")
+      report_lines.append("\n=== REQUIREMENTS BY TYPE ===\n")
+      
+      for req_type, requirements in aggregated['requirements_by_type'].items():
+          report_lines.append(f"\n{req_type.upper()} ({len(requirements)} items):")
+          for i, req in enumerate(requirements, 1):
+              report_lines.append(f"  {i}. {req['requirement']}")
+              if req.get('value'):
+                  report_lines.append(f"     Value: {req['value']}")
+              if req.get('tolerance'):
+                  report_lines.append(f"     Tolerance: {req['tolerance']}")
+              if req.get('standard'):
+                  report_lines.append(f"     Standard: {req['standard']}")
+      
+      report_lines.append("\n=== PROCESSING SUMMARY ===\n")
+      report_lines.append("Steps completed:")
+      for step in aggregated['processing_metadata']['steps_completed']:
+          report_lines.append(f"  ✓ {step}")
+      
+      # Store final report
+      result = {
+          'report': '\n'.join(report_lines),
+          'summary': {
+              'total_requirements': aggregated['total_requirements'],
+              'types_found': list(aggregated['requirements_by_type'].keys()),
+              'success': True
+          }
+      }
+
+# =============================================================================
+# OUTPUT DEFINITIONS
+# Define what files/outputs the pipeline will generate
+# =============================================================================
+outputs:
+  # Text file output
+  - type: "text"
+    filename: "{{ inputs.input_file.basename }}_analysis_report_{{ timestamp }}.txt"
+    content: |
+      {{ step_results.generate_final_output.report }}
+  
+  # JSON output for structured data
+  - type: "text"
+    filename: "{{ inputs.input_file.basename }}_summary_{{ timestamp }}.json"
+    content: |
+      {{ step_results.generate_final_output.summary | tojson }}
+  
+  # Conditional output - only generated if certain conditions are met
+  - type: "text"
+    filename: "detailed_requirements_{{ timestamp }}.txt"
+    content: |
+      {% if step_results.aggregate_results.total_requirements > 0 %}
+      DETAILED REQUIREMENTS ANALYSIS
+      ==============================
+      
+      {% for req_type, requirements in step_results.aggregate_results.requirements_by_type.items() %}
+      {{ req_type.upper() }} REQUIREMENTS:
+      {% for req in requirements %}
+      - {{ req.requirement }}
+        {% if req.value %}Value: {{ req.value }}{% endif %}
+        {% if req.tolerance %}Tolerance: {{ req.tolerance }}{% endif %}
+        {% if req.standard %}Standard: {{ req.standard }}{% endif %}
+      {% endfor %}
+      
+      {% endfor %}
+      {% else %}
+      No requirements were extracted from the input document.
+      {% endif %}
+
+# =============================================================================
+# TEMPLATE VARIABLES REFERENCE
+# =============================================================================
+# The following template variables are available in filename and content templates:
+#
+# {{ timestamp }}                           - Current timestamp (YYYYMMDD_HHMMSS)
+# {{ inputs.input_name }}                   - Access any input by name
+# {{ inputs.input_file.basename }}          - Just the filename without path/extension
+# {{ inputs.input_file.content }}           - File content
+# {{ step_results.step_name.result_key }}   - Access results from any step
+# {{ context.variable_name }}               - Access any context variable
+#
+# Jinja2 template features supported:
+# {% if condition %} ... {% endif %}        - Conditional content
+# {% for item in list %} ... {% endfor %}   - Loops
+# {{ variable | tojson }}                   - Convert to JSON
+# {{ variable | length }}                   - Get length
+# {{ variable[:50] }}                       - String slicing
+#
+# =============================================================================
+
+# =============================================================================
+# BEST PRACTICES AND TIPS
+# =============================================================================
+#
+# 1. STEP NAMING:
+#    - Use descriptive names with underscores
+#    - Follow a logical sequence (extract -> process -> analyze -> generate)
+#
+# 2. DEPENDENCIES:
+#    - Always list dependencies in the order they should execute
+#    - Use meaningful step names that indicate their purpose
+#
+# 3. ERROR HANDLING:
+#    - Add try/catch blocks in Python steps for robust processing
+#    - Check for data existence before accessing nested dictionaries
+#
+# 4. LLM PROMPTS:
+#    - Be specific about output format requirements
+#    - Include examples when possible
+#    - Use system messages to set context and role
+#
+# 5. DEBUGGING:
+#    - Add print statements with [DEBUG] prefix for troubleshooting
+#    - Use pre_hook for logging in foreach loops
+#    - Set reasonable timeouts for LLM steps
+#
+# 6. PERFORMANCE:
+#    - Use foreach sparingly - process batches when possible
+#    - Set appropriate timeouts based on expected processing time
+#    - Consider chunking large datasets
+#
+# 7. TEMPLATE USAGE:
+#    - Test template expressions before deploying
+#    - Use conditional outputs to avoid empty files
+#    - Leverage Jinja2 filters for data formatting
+#
+# =============================================================================

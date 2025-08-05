@@ -1,0 +1,69 @@
+=== Clause: 1.20 METERS AND INSTRUMENTS ===
+
+Requirements (Original):
+- kWh meter is of direct reading type
+- Integrating meters comply with BS 5685
+- Scale length 90 degree with external zero adjustment
+- Indicating instruments of accuracy Class 0.5
+- Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529
+
+Requirements (Condensed):
+- kWh meter is of direct reading type
+- Integrating meters comply with BS 5685
+- Scale length 90 degree with external zero adjustment
+- Indicating instruments of accuracy Class 0.5
+- Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3100 |   3   | 3/5 (60%)  | The iEM3100 is a basic energy meter for direct measurement up to 63 A. It provides essential total and partial active energy counting, making it an economical choice for simple energy consumption monitoring and sub-metering applications.
+  EasyLogic PM2220 |   3   | 3/5 (60%)  | The PM2220 is a versatile meter that combines a graphical LCD display with RS-485 communication. It's an excellent choice for networked applications that benefit from enhanced local data visualization and require basic power quality insights, including up to 15th order harmonics and voltage unbalance monitoring.
+  PowerLogic PM8143 |   3   | 3/5 (60%)  | The PM8143 is the DIN rail-mounted version of the Essential feature set meter, designed for applications where an integrated display is not required. It offers the same core functionality as the PM8140 and can be connected to a remote display for local viewing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | Acti9 iEM3100      | EasyLogic PM2220   | PowerLogic PM8143  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| kWh meter is of direct reading type | kWh meter is of direct reading type |      ✔        |      ✔        |      ✔        |
+| Integrating meters comply with BS 5685 | Integrating meters comply with BS 5685 |      ✔        |      ✔        |      ✔        |
+| Scale length 90 degree with external zero adjustment | Scale length 90 degree with external zero adjustment |      ✔        |      ✔        |      ✔        |
+| Indicating instruments of accuracy Class 0.5 | Indicating instruments of accuracy Class 0.5 |      ✖        |      ✖        |      ✖        |
+| Indicating instruments comply with IEC 60051, IEC 61010, IEC... | Indicating instruments comply with IEC 60051, IEC 61010, ... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3100: Missing [Indicating instruments of accuracy Class 0.5 (from: Indicating instruments of accuracy Class 0.5), Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529 (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529)]
+- EasyLogic PM2220: Missing [Indicating instruments of accuracy Class 0.5 (from: Indicating instruments of accuracy Class 0.5), Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529 (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529)]
+- PowerLogic PM8143: Missing [Indicating instruments of accuracy Class 0.5 (from: Indicating instruments of accuracy Class 0.5), Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529 (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529)]
+
+Recommendation:
+- Best-fit: Acti9 iEM3100 (score: 3)
+  Consider relaxing: [Indicating instruments of accuracy Class 0.5 (from: Indicating instruments of accuracy Class 0.5), Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529 (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529)]
+
+
+=== Clause: a) Cross triggering ===
+
+Requirements (Original):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Requirements (Condensed):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3100 |   1   | 1/1 (100%) | The iEM3100 is a basic energy meter for direct measurement up to 63 A. It provides essential total and partial active energy counting, making it an economical choice for simple energy consumption monitoring and sub-metering applications.
+  EasyLogic PM2220 |   1   | 1/1 (100%) | The PM2220 is a versatile meter that combines a graphical LCD display with RS-485 communication. It's an excellent choice for networked applications that benefit from enhanced local data visualization and require basic power quality insights, including up to 15th order harmonics and voltage unbalance monitoring.
+  PowerLogic PM8143 |   1   | 1/1 (100%) | The PM8143 is the DIN rail-mounted version of the Essential feature set meter, designed for applications where an integrated display is not required. It offers the same core functionality as the PM8140 and can be connected to a remote display for local viewing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | Acti9 iEM3100      | EasyLogic PM2220   | PowerLogic PM8143  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| All disturbances will cause all channels (voltage, current, ... | All disturbances will cause all channels (voltage, curren... |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3100: None. Fully compliant.
+- EasyLogic PM2220: None. Fully compliant.
+- PowerLogic PM8143: None. Fully compliant.
+
+Recommendation:
+- Best-fit: Acti9 iEM3100 (fully compliant)

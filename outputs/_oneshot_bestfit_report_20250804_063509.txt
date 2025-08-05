@@ -1,0 +1,230 @@
+=== Clause: 1.20 METERS AND INSTRUMENTS ===
+
+Requirements (Original):
+- Ammeters shall be provided with selector switches for indication of all phase currents.
+- Meter panels shall be hinged to provide ready access to connections and small wiring shall be enclosed in flexible plastic conduit.
+- kWh meter shall be of direct reading type.
+- All meters and instruments shall be fully tropicalised.
+- Scale shall be of length 90 degree with external zero adjustment.
+- They shall be of accuracy Class 0.5.
+- Removable or hinged covers shall be provided with dust exclusion gaskets.
+- Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.
+- Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.
+- Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.
+- Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.
+- Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.
+- Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.
+- All terminals shall be completely insulated and potential circuits shall be suitably fused.
+- Integrating meters shall comply with BS 5685.
+
+Requirements (Condensed):
+- Ammeters shall be provided with selector switches for indication of all phase currents.
+- Meter panels shall be hinged to provide ready access to connections and small wiring shall be enclosed in flexible plastic conduit.
+- kWh meter shall be of direct reading type.
+- All meters and instruments shall be fully tropicalised.
+- Scale shall be of length 90 degree with external zero adjustment.
+- They shall be of accuracy Class 0.5.
+- Removable or hinged covers shall be provided with dust exclusion gaskets.
+- Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.
+- Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.
+- Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.
+- Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.
+- Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.
+- Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.
+- All terminals shall be completely insulated and potential circuits shall be suitably fused.
+- Integrating meters shall comply with BS 5685.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5100 |   3   | 3/15 (20%) | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+  PowerLogic ION9000T |   3   | 3/15 (20%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  PowerLogic PM8240 |   3   | 3/15 (20%) | The PM8240 is a standard power meter for comprehensive power quality analysis and monitoring. It enhances on the essential model with a higher sampling rate of 256 samples/cycle, significantly more memory (512 MB) for up to 50 data recorders, and Class S power quality measurement according to IEC 61000-4-30.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM5100  | PowerLogic ION9000T | PowerLogic PM8240  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Ammeters shall be provided with selector switches for indica... | Ammeters shall be provided with selector switches for ind... |      ✔        |      ✔        |      ✔        |
+| Meter panels shall be hinged to provide ready access to conn... | Meter panels shall be hinged to provide ready access to c... |      ✔        |      ✔        |      ✔        |
+| kWh meter shall be of direct reading type. | kWh meter shall be of direct reading type. |      ✔        |      ✔        |      ✔        |
+| All meters and instruments shall be fully tropicalised. | All meters and instruments shall be fully tropicalised. |      ✖        |      ✖        |      ✖        |
+| Scale shall be of length 90 degree with external zero adjust... | Scale shall be of length 90 degree with external zero adj... |      ✖        |      ✖        |      ✖        |
+| They shall be of accuracy Class 0.5. | They shall be of accuracy Class 0.5. |      ✖        |      ✖        |      ✖        |
+| Removable or hinged covers shall be provided with dust exclu... | Removable or hinged covers shall be provided with dust ex... |      ✖        |      ✖        |      ✖        |
+| Protective instruments shall be provided with provision for ... | Protective instruments shall be provided with provision f... |      ✖        |      ✖        |      ✖        |
+| Voltmeters shall be provided with selector switches for phas... | Voltmeters shall be provided with selector switches for p... |      ✖        |      ✖        |      ✖        |
+| Where vibration is present arising from electro-mechanical d... | Where vibration is present arising from electro-mechanica... |      ✖        |      ✖        |      ✖        |
+| Indicating instruments shall comply with IEC 60051, IEC 6101... | Indicating instruments shall comply with IEC 60051, IEC 6... |      ✖        |      ✖        |      ✖        |
+| Instruments, meters and relays located on the front of the s... | Instruments, meters and relays located on the front of th... |      ✖        |      ✖        |      ✖        |
+| Meters, instruments and relays for external panel mounting s... | Meters, instruments and relays for external panel mountin... |      ✖        |      ✖        |      ✖        |
+| All terminals shall be completely insulated and potential ci... | All terminals shall be completely insulated and potential... |      ✖        |      ✖        |      ✖        |
+| Integrating meters shall comply with BS 5685. | Integrating meters shall comply with BS 5685. |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5100: Missing [All meters and instruments shall be fully tropicalised. (from: All meters and instruments shall be fully tropicalised.), Scale shall be of length 90 degree with external zero adjustment. (from: Scale shall be of length 90 degree with external zero adjustment.), They shall be of accuracy Class 0.5. (from: They shall be of accuracy Class 0.5.), Removable or hinged covers shall be provided with dust exclusion gaskets. (from: Removable or hinged covers shall be provided with dust exclusion gaskets.), Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings. (from: Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.), Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication. (from: Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.), Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices. (from: Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.), Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529. (from: Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.), Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated. (from: Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.), Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black. (from: Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.), All terminals shall be completely insulated and potential circuits shall be suitably fused. (from: All terminals shall be completely insulated and potential circuits shall be suitably fused.), Integrating meters shall comply with BS 5685. (from: Integrating meters shall comply with BS 5685.)]
+- PowerLogic ION9000T: Missing [All meters and instruments shall be fully tropicalised. (from: All meters and instruments shall be fully tropicalised.), Scale shall be of length 90 degree with external zero adjustment. (from: Scale shall be of length 90 degree with external zero adjustment.), They shall be of accuracy Class 0.5. (from: They shall be of accuracy Class 0.5.), Removable or hinged covers shall be provided with dust exclusion gaskets. (from: Removable or hinged covers shall be provided with dust exclusion gaskets.), Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings. (from: Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.), Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication. (from: Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.), Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices. (from: Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.), Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529. (from: Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.), Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated. (from: Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.), Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black. (from: Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.), All terminals shall be completely insulated and potential circuits shall be suitably fused. (from: All terminals shall be completely insulated and potential circuits shall be suitably fused.), Integrating meters shall comply with BS 5685. (from: Integrating meters shall comply with BS 5685.)]
+- PowerLogic PM8240: Missing [All meters and instruments shall be fully tropicalised. (from: All meters and instruments shall be fully tropicalised.), Scale shall be of length 90 degree with external zero adjustment. (from: Scale shall be of length 90 degree with external zero adjustment.), They shall be of accuracy Class 0.5. (from: They shall be of accuracy Class 0.5.), Removable or hinged covers shall be provided with dust exclusion gaskets. (from: Removable or hinged covers shall be provided with dust exclusion gaskets.), Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings. (from: Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.), Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication. (from: Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.), Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices. (from: Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.), Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529. (from: Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.), Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated. (from: Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.), Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black. (from: Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.), All terminals shall be completely insulated and potential circuits shall be suitably fused. (from: All terminals shall be completely insulated and potential circuits shall be suitably fused.), Integrating meters shall comply with BS 5685. (from: Integrating meters shall comply with BS 5685.)]
+
+Recommendation:
+- Best-fit: PowerLogic PM5100 (score: 3)
+  Consider relaxing: [All meters and instruments shall be fully tropicalised. (from: All meters and instruments shall be fully tropicalised.), Scale shall be of length 90 degree with external zero adjustment. (from: Scale shall be of length 90 degree with external zero adjustment.), They shall be of accuracy Class 0.5. (from: They shall be of accuracy Class 0.5.), Removable or hinged covers shall be provided with dust exclusion gaskets. (from: Removable or hinged covers shall be provided with dust exclusion gaskets.), Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings. (from: Protective instruments shall be provided with provision for locking to prevent unauthorised adjustments to the settings.), Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication. (from: Voltmeters shall be provided with selector switches for phase-to-phase and phase-to-neutral voltage indication.), Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices. (from: Where vibration is present arising from electro-mechanical devices in the vicinity, the meter/instruments shall be mounted on vibration absorbing material to prevent malfunctioning of the devices.), Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529. (from: Indicating instruments shall comply with IEC 60051, IEC 61010, IEC 60529.), Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated. (from: Instruments, meters and relays located on the front of the switchboard shall be so positioned that as far as possible, each instrument, meter and relay is adjacent to the unit with which it is associated.), Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black. (from: Meters, instruments and relays for external panel mounting shall be of flush pattern, with square escutcheon plates finished matt black.), All terminals shall be completely insulated and potential circuits shall be suitably fused. (from: All terminals shall be completely insulated and potential circuits shall be suitably fused.), Integrating meters shall comply with BS 5685. (from: Integrating meters shall comply with BS 5685.)]
+
+
+=== Clause: 1.20.1 Standard ===
+
+Requirements (Original):
+- Multi-function electronic meters shall comply with BS EN 61557-12 or IEC 61557-12.
+- Indicating meters of analogue type shall comply with class 2.5 of BS EN 60051 or IEC 60051.
+
+Requirements (Condensed):
+- Multi-function electronic meters shall comply with BS EN 61557-12 or IEC 61557-12.
+- Indicating meters of analogue type shall comply with class 2.5 of BS EN 60051 or IEC 60051.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5100 |   2   | 2/2 (100%) | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+  PowerLogic ION9000T |   2   | 2/2 (100%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  PowerLogic PM8240 |   2   | 2/2 (100%) | The PM8240 is a standard power meter for comprehensive power quality analysis and monitoring. It enhances on the essential model with a higher sampling rate of 256 samples/cycle, significantly more memory (512 MB) for up to 50 data recorders, and Class S power quality measurement according to IEC 61000-4-30.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM5100  | PowerLogic ION9000T | PowerLogic PM8240  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Multi-function electronic meters shall comply with BS EN 615... | Multi-function electronic meters shall comply with BS EN ... |      ✔        |      ✔        |      ✔        |
+| Indicating meters of analogue type shall comply with class 2... | Indicating meters of analogue type shall comply with clas... |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5100: None. Fully compliant.
+- PowerLogic ION9000T: None. Fully compliant.
+- PowerLogic PM8240: None. Fully compliant.
+
+Recommendation:
+- Best-fit: PowerLogic PM5100 (fully compliant)
+
+
+=== Clause: 1.20.2 Mounting ===
+
+Requirements (Original):
+- Multi-function electronic meters
+- Meters of analogue type with approximate 75 mm dial and with an external zero adjustment
+
+Requirements (Condensed):
+- Multi-function meters
+- Analogue meters, 75mm dial, external zero adjustment
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5100 |   2   | 2/2 (100%) | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+  PowerLogic ION9000T |   2   | 2/2 (100%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  PowerLogic PM8240 |   2   | 2/2 (100%) | The PM8240 is a standard power meter for comprehensive power quality analysis and monitoring. It enhances on the essential model with a higher sampling rate of 256 samples/cycle, significantly more memory (512 MB) for up to 50 data recorders, and Class S power quality measurement according to IEC 61000-4-30.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM5100  | PowerLogic ION9000T | PowerLogic PM8240  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Multi-function electronic meters   | Multi-function meters        |      ✔        |      ✔        |      ✔        |
+| Meters of analogue type with approximate 75 mm dial and with... | Analogue meters, 75mm dial, external zero adjustment |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5100: None. Fully compliant.
+- PowerLogic ION9000T: None. Fully compliant.
+- PowerLogic PM8240: None. Fully compliant.
+
+Recommendation:
+- Best-fit: PowerLogic PM5100 (fully compliant)
+
+
+=== Clause: 1.20.4 Multi-Function Electronic Meters ===
+
+Requirements (Original):
+- Accepts current inputs from standard measuring current transformers with rated secondary current of 5A
+- Suitable for operation at 400V/230V, 50Hz
+- Apparent Power (kVA): per phase & three phase total ±0.5%
+- Includes hourly, daily, monthly and annual data
+- Real Power (kW): per phase & three phase total ±0.5%
+- Connection cable with the appropriate plug and a copy of proprietary-made software for data retrieval shall be provided
+- Minimum overcurrent withstand rating of 100A for 1 second
+- For communication with portable personal computer for energy control and audit purpose
+- Frequency (Hz) ±0.5%
+- Equipped with sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months
+- Rated for an operating temperature up to 50°C
+- True Root Mean Square (RMS) Current: per phase & neutral ±0.5%
+- Capable to trend the required parameters as stipulated in the EMA at every 15 minutes
+- Reactive Power Demand (kVArd): three phase total ±0.5%
+- Total Power Factor: per phase & three phase total ±0.5%
+- Equipped with a communication port at front panel, using either RS485, RJ45 or similar socket and plug as Approved
+- Real Energy (kWh): three phase total ±0.5%
+- Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%
+- True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%
+- Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)
+- Reactive Power (kVAr): per phase & three phase total ±0.5%
+- Real Power Demand (kWd): three phase total, present & peak ±0.5%
+- Maximum Demand Current (Id): per phase, present & peak ±0.5%
+
+Requirements (Condensed):
+- Current input 5A
+- Voltage 400V/230V, Frequency 50Hz
+- Apparent power ±0.5%
+- Data: hourly, daily, monthly, annual
+- Real power ±0.5%
+- Cable with plug, software provided
+- Overcurrent rating 100A
+- Communication with PC
+- Frequency ±0.5%
+- Memory 36 months
+- Temperature 50°C
+- RMS current ±0.5%
+- Trend parameters 15 minutes
+- Reactive power demand ±0.5%
+- Power factor ±0.5%
+- Communication port RS485/RJ45
+- Real energy ±0.5%
+- Apparent power demand ±0.5%
+- RMS volts ±0.5%
+- THD up to 31st
+- Reactive power ±0.5%
+- Real power demand ±0.5%
+- Demand current ±0.5%
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5100 |   3   | 3/23 (13%) | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+  PowerLogic ION9000T |   3   | 3/23 (13%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  PowerLogic PM8240 |   3   | 3/23 (13%) | The PM8240 is a standard power meter for comprehensive power quality analysis and monitoring. It enhances on the essential model with a higher sampling rate of 256 samples/cycle, significantly more memory (512 MB) for up to 50 data recorders, and Class S power quality measurement according to IEC 61000-4-30.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM5100  | PowerLogic ION9000T | PowerLogic PM8240  |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Accepts current inputs from standard measuring current trans... | Current input 5A             |      ✔        |      ✔        |      ✔        |
+| Suitable for operation at 400V/230V, 50Hz | Voltage 400V/230V, Frequency 50Hz |      ✔        |      ✔        |      ✔        |
+| Apparent Power (kVA): per phase & three phase total ±0.5% | Apparent power ±0.5%         |      ✔        |      ✔        |      ✔        |
+| Includes hourly, daily, monthly and annual data | Data: hourly, daily, monthly, annual |      ✖        |      ✖        |      ✖        |
+| Real Power (kW): per phase & three phase total ±0.5% | Real power ±0.5%             |      ✖        |      ✖        |      ✖        |
+| Connection cable with the appropriate plug and a copy of pro... | Cable with plug, software provided |      ✖        |      ✖        |      ✖        |
+| Minimum overcurrent withstand rating of 100A for 1 second | Overcurrent rating 100A      |      ✖        |      ✖        |      ✖        |
+| For communication with portable personal computer for energy... | Communication with PC        |      ✖        |      ✖        |      ✖        |
+| Frequency (Hz) ±0.5%               | Frequency ±0.5%              |      ✖        |      ✖        |      ✖        |
+| Equipped with sufficient built-in memory capable of maintain... | Memory 36 months             |      ✖        |      ✖        |      ✖        |
+| Rated for an operating temperature up to 50°C | Temperature 50°C             |      ✖        |      ✖        |      ✖        |
+| True Root Mean Square (RMS) Current: per phase & neutral ±0.... | RMS current ±0.5%            |      ✖        |      ✖        |      ✖        |
+| Capable to trend the required parameters as stipulated in th... | Trend parameters 15 minutes  |      ✖        |      ✖        |      ✖        |
+| Reactive Power Demand (kVArd): three phase total ±0.5% | Reactive power demand ±0.5%  |      ✖        |      ✖        |      ✖        |
+| Total Power Factor: per phase & three phase total ±0.5% | Power factor ±0.5%           |      ✖        |      ✖        |      ✖        |
+| Equipped with a communication port at front panel, using eit... | Communication port RS485/RJ45 |      ✖        |      ✖        |      ✖        |
+| Real Energy (kWh): three phase total ±0.5% | Real energy ±0.5%            |      ✖        |      ✖        |      ✖        |
+| Apparent Power Demand (kVAd): three phase total, present & p... | Apparent power demand ±0.5%  |      ✖        |      ✖        |      ✖        |
+| True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5% | RMS volts ±0.5%              |      ✖        |      ✖        |      ✖        |
+| Total Harmonic Distortion (THD): per phase, voltage & curren... | THD up to 31st               |      ✖        |      ✖        |      ✖        |
+| Reactive Power (kVAr): per phase & three phase total ±0.5% | Reactive power ±0.5%         |      ✖        |      ✖        |      ✖        |
+| Real Power Demand (kWd): three phase total, present & peak ±... | Real power demand ±0.5%      |      ✖        |      ✖        |      ✖        |
+| Maximum Demand Current (Id): per phase, present & peak ±0.5% | Demand current ±0.5%         |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5100: Missing [Data: hourly, daily, monthly, annual (from: Includes hourly, daily, monthly and annual data), Real power ±0.5% (from: Real Power (kW): per phase & three phase total ±0.5%), Cable with plug, software provided (from: Connection cable with the appropriate plug and a copy of proprietary-made software for data retrieval shall be provided), Overcurrent rating 100A (from: Minimum overcurrent withstand rating of 100A for 1 second), Communication with PC (from: For communication with portable personal computer for energy control and audit purpose), Frequency ±0.5% (from: Frequency (Hz) ±0.5%), Memory 36 months (from: Equipped with sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months), Temperature 50°C (from: Rated for an operating temperature up to 50°C), RMS current ±0.5% (from: True Root Mean Square (RMS) Current: per phase & neutral ±0.5%), Trend parameters 15 minutes (from: Capable to trend the required parameters as stipulated in the EMA at every 15 minutes), Reactive power demand ±0.5% (from: Reactive Power Demand (kVArd): three phase total ±0.5%), Power factor ±0.5% (from: Total Power Factor: per phase & three phase total ±0.5%), Communication port RS485/RJ45 (from: Equipped with a communication port at front panel, using either RS485, RJ45 or similar socket and plug as Approved), Real energy ±0.5% (from: Real Energy (kWh): three phase total ±0.5%), Apparent power demand ±0.5% (from: Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%), RMS volts ±0.5% (from: True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%), THD up to 31st (from: Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)), Reactive power ±0.5% (from: Reactive Power (kVAr): per phase & three phase total ±0.5%), Real power demand ±0.5% (from: Real Power Demand (kWd): three phase total, present & peak ±0.5%), Demand current ±0.5% (from: Maximum Demand Current (Id): per phase, present & peak ±0.5%)]
+- PowerLogic ION9000T: Missing [Data: hourly, daily, monthly, annual (from: Includes hourly, daily, monthly and annual data), Real power ±0.5% (from: Real Power (kW): per phase & three phase total ±0.5%), Cable with plug, software provided (from: Connection cable with the appropriate plug and a copy of proprietary-made software for data retrieval shall be provided), Overcurrent rating 100A (from: Minimum overcurrent withstand rating of 100A for 1 second), Communication with PC (from: For communication with portable personal computer for energy control and audit purpose), Frequency ±0.5% (from: Frequency (Hz) ±0.5%), Memory 36 months (from: Equipped with sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months), Temperature 50°C (from: Rated for an operating temperature up to 50°C), RMS current ±0.5% (from: True Root Mean Square (RMS) Current: per phase & neutral ±0.5%), Trend parameters 15 minutes (from: Capable to trend the required parameters as stipulated in the EMA at every 15 minutes), Reactive power demand ±0.5% (from: Reactive Power Demand (kVArd): three phase total ±0.5%), Power factor ±0.5% (from: Total Power Factor: per phase & three phase total ±0.5%), Communication port RS485/RJ45 (from: Equipped with a communication port at front panel, using either RS485, RJ45 or similar socket and plug as Approved), Real energy ±0.5% (from: Real Energy (kWh): three phase total ±0.5%), Apparent power demand ±0.5% (from: Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%), RMS volts ±0.5% (from: True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%), THD up to 31st (from: Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)), Reactive power ±0.5% (from: Reactive Power (kVAr): per phase & three phase total ±0.5%), Real power demand ±0.5% (from: Real Power Demand (kWd): three phase total, present & peak ±0.5%), Demand current ±0.5% (from: Maximum Demand Current (Id): per phase, present & peak ±0.5%)]
+- PowerLogic PM8240: Missing [Data: hourly, daily, monthly, annual (from: Includes hourly, daily, monthly and annual data), Real power ±0.5% (from: Real Power (kW): per phase & three phase total ±0.5%), Cable with plug, software provided (from: Connection cable with the appropriate plug and a copy of proprietary-made software for data retrieval shall be provided), Overcurrent rating 100A (from: Minimum overcurrent withstand rating of 100A for 1 second), Communication with PC (from: For communication with portable personal computer for energy control and audit purpose), Frequency ±0.5% (from: Frequency (Hz) ±0.5%), Memory 36 months (from: Equipped with sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months), Temperature 50°C (from: Rated for an operating temperature up to 50°C), RMS current ±0.5% (from: True Root Mean Square (RMS) Current: per phase & neutral ±0.5%), Trend parameters 15 minutes (from: Capable to trend the required parameters as stipulated in the EMA at every 15 minutes), Reactive power demand ±0.5% (from: Reactive Power Demand (kVArd): three phase total ±0.5%), Power factor ±0.5% (from: Total Power Factor: per phase & three phase total ±0.5%), Communication port RS485/RJ45 (from: Equipped with a communication port at front panel, using either RS485, RJ45 or similar socket and plug as Approved), Real energy ±0.5% (from: Real Energy (kWh): three phase total ±0.5%), Apparent power demand ±0.5% (from: Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%), RMS volts ±0.5% (from: True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%), THD up to 31st (from: Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)), Reactive power ±0.5% (from: Reactive Power (kVAr): per phase & three phase total ±0.5%), Real power demand ±0.5% (from: Real Power Demand (kWd): three phase total, present & peak ±0.5%), Demand current ±0.5% (from: Maximum Demand Current (Id): per phase, present & peak ±0.5%)]
+
+Recommendation:
+- Best-fit: PowerLogic PM5100 (score: 3)
+  Consider relaxing: [Data: hourly, daily, monthly, annual (from: Includes hourly, daily, monthly and annual data), Real power ±0.5% (from: Real Power (kW): per phase & three phase total ±0.5%), Cable with plug, software provided (from: Connection cable with the appropriate plug and a copy of proprietary-made software for data retrieval shall be provided), Overcurrent rating 100A (from: Minimum overcurrent withstand rating of 100A for 1 second), Communication with PC (from: For communication with portable personal computer for energy control and audit purpose), Frequency ±0.5% (from: Frequency (Hz) ±0.5%), Memory 36 months (from: Equipped with sufficient built-in memory capable of maintaining all data collected for a minimum of 36 months), Temperature 50°C (from: Rated for an operating temperature up to 50°C), RMS current ±0.5% (from: True Root Mean Square (RMS) Current: per phase & neutral ±0.5%), Trend parameters 15 minutes (from: Capable to trend the required parameters as stipulated in the EMA at every 15 minutes), Reactive power demand ±0.5% (from: Reactive Power Demand (kVArd): three phase total ±0.5%), Power factor ±0.5% (from: Total Power Factor: per phase & three phase total ±0.5%), Communication port RS485/RJ45 (from: Equipped with a communication port at front panel, using either RS485, RJ45 or similar socket and plug as Approved), Real energy ±0.5% (from: Real Energy (kWh): three phase total ±0.5%), Apparent power demand ±0.5% (from: Apparent Power Demand (kVAd): three phase total, present & peak ±0.5%), RMS volts ±0.5% (from: True RMS Volts: all phase-to-phase & phase-to-neutral ±0.5%), THD up to 31st (from: Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)), Reactive power ±0.5% (from: Reactive Power (kVAr): per phase & three phase total ±0.5%), Real power demand ±0.5% (from: Real Power Demand (kWd): three phase total, present & peak ±0.5%), Demand current ±0.5% (from: Maximum Demand Current (Id): per phase, present & peak ±0.5%)]

@@ -1,0 +1,24 @@
+=== Clause: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES ===
+
+Requirements:
+- Voltage range 400V/230V
+- Frequency ±0.5%
+- Accuracy class 0.5
+- Current transformer secondary 5A
+- Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%
+- Memory capacity for 36 months data
+- Operating temperature up to 50°C
+- Overcurrent withstand rating of 100A for 1 second
+- Communication interface RS485, RJ45 or similar socket and plug as Approved
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data, with user-defined durations
+- Records both waveforms and rms plots for rms disturbances
+
+[CHECK] PDF RAG knowledge base was NOT used for any clause in this analysis.

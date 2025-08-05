@@ -447,7 +447,8 @@ class PromptEngine:
             # Reduced debug output for clarity
             step_name = step['name']
             step_type = step.get('type', '')
-            prompt_template = step.get('prompt_template', '')
+            # Support both 'prompt_template' and 'input' keys for LLM prompts
+            prompt_template = step.get('prompt_template', '') or step.get('input', '')
             dependencies = step.get('dependencies', [])
             timeout = step.get('timeout', 120)
             if llm_model:

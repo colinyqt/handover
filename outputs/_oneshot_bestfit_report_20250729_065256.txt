@@ -1,0 +1,70 @@
+=== Clause: 1.20.4 Multi-Function Electronic Meters ===
+
+Requirements:
+- Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%
+- Accuracy class 0.5
+- Frequency ±0.5%
+- Voltage range 400V/230V
+- Current transformer secondary 5A
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3255 |   3   | 3/5 (60%)  | The iEM3255 is a current transformer (CT) connected energy meter offering high accuracy (Class 0.5S) for billing applications. It provides four-quadrant energy measurement, a digital I/O, multi-tariff functions, and Modbus communication, making it ideal for monitoring mains or critical feeders in low and medium voltage networks.
+  EasyLogic PM2230 |   3   | 3/5 (60%)  | The PM2230 is the premium model in the series, ideal for critical applications such as sub-billing and advanced power quality analysis. It should be selected when the highest accuracy (Class 0.5S) , detailed harmonic analysis (up to 31st) , data logging, alarming, multi-tariff functions , and I/O expandability  are required.
+  PowerLogic PM8240 |   2   | 2/5 (40%)  | The PM8240 is a standard power meter for comprehensive power quality analysis and monitoring. It enhances on the essential model with a higher sampling rate of 256 samples/cycle, significantly more memory (512 MB) for up to 50 data recorders, and Class S power quality measurement according to IEC 61000-4-30.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | Acti9 iEM3255      | EasyLogic PM2230   | PowerLogic PM8240  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Total Harmonic Distortion (THD) per phase, voltage & curr... |      ✔        |      ✔        |      ✔        |
+| Accuracy class 0.5                                           |      ✔        |      ✔        |      ✖        |
+| Frequency ±0.5%                                              |      ✔        |      ✔        |      ✔        |
+| Voltage range 400V/230V                                      |      ✖        |      ✖        |      ✖        |
+| Current transformer secondary 5A                             |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3255: Missing [Voltage range 400V/230V, Current transformer secondary 5A]
+- EasyLogic PM2230: Missing [Voltage range 400V/230V, Current transformer secondary 5A]
+- PowerLogic PM8240: Missing [Accuracy class 0.5, Voltage range 400V/230V, Current transformer secondary 5A]
+
+Recommendation:
+- Best-fit: Acti9 iEM3255 (score: 3)
+  Consider relaxing: [Voltage range 400V/230V, Current transformer secondary 5A]
+
+
+=== Clause: waveform on voltages and currents on trigger ===
+
+Requirements:
+- Up to 10 programmable recordings with different start and stop time
+- Provides event recording, waveform capture, waveform display, phasor diagrams, historical trending, time-of-use etc.
+- Provides a RS485 and/or TCP/IP communication interface to the metering communication network
+- On-board memory up to 8 GB
+- Complies with IEC 60255 & 61000 Pt 4 & 6
+- Records individual order for even and odd harmonic of voltage and current up to 50th order
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  EasyLogic PM2120 |   3   | 3/6 (50%)  | Select the PM2120 for applications that require integration into a networked system via RS-485 Modbus. It builds on the PM2110 by adding basic power quality analysis with up to 15th order harmonics and a real-time clock, making it suitable for remote monitoring with an economical LED display.
+  Acti9 iEM3110 |   2   | 2/6 (33%)  | The iEM3110 is a 63A direct-measure energy meter that builds on the basic model by adding a configurable pulse output for remote monitoring of energy consumption. It is suitable for integration with PLCs or other basic data acquisition systems.
+  PowerLogic PM8243 |   2   | 2/6 (33%)  | The PM8243 is the DIN rail-mounted version of the Standard feature set meter, designed for applications where an integrated display is not required. It offers the same core functionality as the PM8240 and can be connected to a remote display for local viewing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | EasyLogic PM2120   | Acti9 iEM3110      | PowerLogic PM8243  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Up to 10 programmable recordings with different start and... |      ✔        |      ✔        |      ✖        |
+| Provides event recording, waveform capture, waveform disp... |      ✔        |      ✔        |      ✔        |
+| Provides a RS485 and/or TCP/IP communication interface to... |      ✔        |      ✖        |      ✔        |
+| On-board memory up to 8 GB                                   |      ✖        |      ✖        |      ✖        |
+| Complies with IEC 60255 & 61000 Pt 4 & 6                     |      ✖        |      ✖        |      ✖        |
+| Records individual order for even and odd harmonic of vol... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- EasyLogic PM2120: Missing [On-board memory up to 8 GB, Complies with IEC 60255 & 61000 Pt 4 & 6, Records individual order for even and odd harmonic of voltage and current up to 50th order]
+- Acti9 iEM3110: Missing [Provides a RS485 and/or TCP/IP communication interface to the metering communication network, On-board memory up to 8 GB, Complies with IEC 60255 & 61000 Pt 4 & 6, Records individual order for even and odd harmonic of voltage and current up to 50th order]
+- PowerLogic PM8243: Missing [Up to 10 programmable recordings with different start and stop time, On-board memory up to 8 GB, Complies with IEC 60255 & 61000 Pt 4 & 6, Records individual order for even and odd harmonic of voltage and current up to 50th order]
+
+Recommendation:
+- Best-fit: EasyLogic PM2120 (score: 3)
+  Consider relaxing: [On-board memory up to 8 GB, Complies with IEC 60255 & 61000 Pt 4 & 6, Records individual order for even and odd harmonic of voltage and current up to 50th order]

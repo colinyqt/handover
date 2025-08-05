@@ -1,0 +1,167 @@
+=== Clause: 1.20 METERS AND INSTRUMENTS ===
+
+Requirements (Original):
+- Potential circuits suitably fused
+- Accuracy Class 0.5
+- Removable or hinged covers with dust exclusion gaskets
+- Protective instruments with provision for locking
+- Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication
+- Ammeters with selector switches for indication of all phase currents
+- Scale of length 90 degrees with external zero adjustment
+- Meters and instruments fully tropicalised
+- KWh meter of direct reading type
+- Vibration absorbing material for meters/instruments in vibration-prone areas
+- Integrating meters comply with BS 5685
+- Flush pattern meters with square escutcheon plates finished matt black
+- Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529
+- All terminals completely insulated
+
+Requirements (Condensed):
+- Fused circuits
+- Accuracy class 0.5
+- Dust-exclusion covers
+- Lockable protective instruments
+- Phase/neutral voltmeters
+- All-phase ammeters
+- 90-degree scale, adjustable zero
+- Tropicalized meters/instruments
+- Direct-reading KWh meter
+- Vibration-absorbing materials
+- BS 5685 compliant meters
+- Flush-pattern meters, black escutcheons
+- IEC 60051, 61010, 60529 compliant instruments
+- Insulated terminals
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8110 |   3   | 3/14 (21%) | The PM8110 is the low-voltage DC variant of the Essential power meter. It provides the same versatile power monitoring and WAGES metering with a color TFT display, but is designed for systems with a 20-60 V DC control power supply.
+  EasyLogic PM2130 |   3   | 3/14 (21%) | The PM2130 is the premium LED display model, designed for applications needing higher Class 0.5S accuracy. It offers advanced power quality analysis with up to 31st order harmonics , data logging, alarms, and expandability with I/O modules, making it suitable for more critical monitoring and control tasks.
+  PowerLogic ION9000T |   3   | 3/14 (21%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM8110  | EasyLogic PM2130   | PowerLogic ION9000T |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Potential circuits suitably fused  | Fused circuits               |      ✔        |      ✔        |      ✔        |
+| Accuracy Class 0.5                 | Accuracy class 0.5           |      ✔        |      ✔        |      ✔        |
+| Removable or hinged covers with dust exclusion gaskets | Dust-exclusion covers        |      ✔        |      ✔        |      ✔        |
+| Protective instruments with provision for locking | Lockable protective instruments |      ✖        |      ✖        |      ✖        |
+| Voltmeters with selector switches for phase-to-phase and pha... | Phase/neutral voltmeters     |      ✖        |      ✖        |      ✖        |
+| Ammeters with selector switches for indication of all phase ... | All-phase ammeters           |      ✖        |      ✖        |      ✖        |
+| Scale of length 90 degrees with external zero adjustment | 90-degree scale, adjustable zero |      ✖        |      ✖        |      ✖        |
+| Meters and instruments fully tropicalised | Tropicalized meters/instruments |      ✖        |      ✖        |      ✖        |
+| KWh meter of direct reading type   | Direct-reading KWh meter     |      ✖        |      ✖        |      ✖        |
+| Vibration absorbing material for meters/instruments in vibra... | Vibration-absorbing materials |      ✖        |      ✖        |      ✖        |
+| Integrating meters comply with BS 5685 | BS 5685 compliant meters     |      ✖        |      ✖        |      ✖        |
+| Flush pattern meters with square escutcheon plates finished ... | Flush-pattern meters, black escutcheons |      ✖        |      ✖        |      ✖        |
+| Indicating instruments comply with IEC 60051, IEC 61010, IEC... | IEC 60051, 61010, 60529 compliant instruments |      ✖        |      ✖        |      ✖        |
+| All terminals completely insulated | Insulated terminals          |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8110: Missing [Lockable protective instruments (from: Protective instruments with provision for locking), Phase/neutral voltmeters (from: Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication), All-phase ammeters (from: Ammeters with selector switches for indication of all phase currents), 90-degree scale, adjustable zero (from: Scale of length 90 degrees with external zero adjustment), Tropicalized meters/instruments (from: Meters and instruments fully tropicalised), Direct-reading KWh meter (from: KWh meter of direct reading type), Vibration-absorbing materials (from: Vibration absorbing material for meters/instruments in vibration-prone areas), BS 5685 compliant meters (from: Integrating meters comply with BS 5685), Flush-pattern meters, black escutcheons (from: Flush pattern meters with square escutcheon plates finished matt black), IEC 60051, 61010, 60529 compliant instruments (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529), Insulated terminals (from: All terminals completely insulated)]
+- EasyLogic PM2130: Missing [Lockable protective instruments (from: Protective instruments with provision for locking), Phase/neutral voltmeters (from: Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication), All-phase ammeters (from: Ammeters with selector switches for indication of all phase currents), 90-degree scale, adjustable zero (from: Scale of length 90 degrees with external zero adjustment), Tropicalized meters/instruments (from: Meters and instruments fully tropicalised), Direct-reading KWh meter (from: KWh meter of direct reading type), Vibration-absorbing materials (from: Vibration absorbing material for meters/instruments in vibration-prone areas), BS 5685 compliant meters (from: Integrating meters comply with BS 5685), Flush-pattern meters, black escutcheons (from: Flush pattern meters with square escutcheon plates finished matt black), IEC 60051, 61010, 60529 compliant instruments (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529), Insulated terminals (from: All terminals completely insulated)]
+- PowerLogic ION9000T: Missing [Lockable protective instruments (from: Protective instruments with provision for locking), Phase/neutral voltmeters (from: Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication), All-phase ammeters (from: Ammeters with selector switches for indication of all phase currents), 90-degree scale, adjustable zero (from: Scale of length 90 degrees with external zero adjustment), Tropicalized meters/instruments (from: Meters and instruments fully tropicalised), Direct-reading KWh meter (from: KWh meter of direct reading type), Vibration-absorbing materials (from: Vibration absorbing material for meters/instruments in vibration-prone areas), BS 5685 compliant meters (from: Integrating meters comply with BS 5685), Flush-pattern meters, black escutcheons (from: Flush pattern meters with square escutcheon plates finished matt black), IEC 60051, 61010, 60529 compliant instruments (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529), Insulated terminals (from: All terminals completely insulated)]
+
+Recommendation:
+- Best-fit: PowerLogic PM8110 (score: 3)
+  Consider relaxing: [Lockable protective instruments (from: Protective instruments with provision for locking), Phase/neutral voltmeters (from: Voltmeters with selector switches for phase-to-phase and phase-to-neutral voltage indication), All-phase ammeters (from: Ammeters with selector switches for indication of all phase currents), 90-degree scale, adjustable zero (from: Scale of length 90 degrees with external zero adjustment), Tropicalized meters/instruments (from: Meters and instruments fully tropicalised), Direct-reading KWh meter (from: KWh meter of direct reading type), Vibration-absorbing materials (from: Vibration absorbing material for meters/instruments in vibration-prone areas), BS 5685 compliant meters (from: Integrating meters comply with BS 5685), Flush-pattern meters, black escutcheons (from: Flush pattern meters with square escutcheon plates finished matt black), IEC 60051, 61010, 60529 compliant instruments (from: Indicating instruments comply with IEC 60051, IEC 61010, IEC 60529), Insulated terminals (from: All terminals completely insulated)]
+
+
+=== Clause: Cross triggering ===
+
+Requirements (Original):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Requirements (Condensed):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8110 |   1   | 1/1 (100%) | The PM8110 is the low-voltage DC variant of the Essential power meter. It provides the same versatile power monitoring and WAGES metering with a color TFT display, but is designed for systems with a 20-60 V DC control power supply.
+  PowerLogic ION9000T |   1   | 1/1 (100%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  EasyLogic PM2130 |   1   | 1/1 (100%) | The PM2130 is the premium LED display model, designed for applications needing higher Class 0.5S accuracy. It offers advanced power quality analysis with up to 31st order harmonics , data logging, alarms, and expandability with I/O modules, making it suitable for more critical monitoring and control tasks.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM8110  | PowerLogic ION9000T | EasyLogic PM2130   |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| All disturbances will cause all channels (voltage, current, ... | All disturbances will cause all channels (voltage, curren... |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8110: None. Fully compliant.
+- PowerLogic ION9000T: None. Fully compliant.
+- EasyLogic PM2130: None. Fully compliant.
+
+Recommendation:
+- Best-fit: PowerLogic PM8110 (fully compliant)
+
+
+=== Clause: Triggering on both line-to-neutral and line-to-line channels ===
+
+Requirements (Original):
+- Triggering shall be on both the line-to-neutral and line-to-line channels. All disturbances will result in recording of both line-to-neutral and line-to-line voltage waveforms.
+
+Requirements (Condensed):
+- Triggering shall be on both the line-to-neutral and line-to-line channels. All disturbances will result in recording of both line-to-neutral and line-to-line voltage waveforms.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8110 |   1   | 1/1 (100%) | The PM8110 is the low-voltage DC variant of the Essential power meter. It provides the same versatile power monitoring and WAGES metering with a color TFT display, but is designed for systems with a 20-60 V DC control power supply.
+  PowerLogic ION9000T |   1   | 1/1 (100%) | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  EasyLogic PM2130 |   1   | 1/1 (100%) | The PM2130 is the premium LED display model, designed for applications needing higher Class 0.5S accuracy. It offers advanced power quality analysis with up to 31st order harmonics , data logging, alarms, and expandability with I/O modules, making it suitable for more critical monitoring and control tasks.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM8110  | PowerLogic ION9000T | EasyLogic PM2130   |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| Triggering shall be on both the line-to-neutral and line-to-... | Triggering shall be on both the line-to-neutral and line-... |      ✔        |      ✔        |      ✔        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8110: None. Fully compliant.
+- PowerLogic ION9000T: None. Fully compliant.
+- EasyLogic PM2130: None. Fully compliant.
+
+Recommendation:
+- Best-fit: PowerLogic PM8110 (fully compliant)
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements (Original):
+- The initiation of a trigger will cause the instrument to store the actual waveforms (voltage and current) during the disturbance. The waveform recording will include user-defined pre-event and post-event cycles.
+- The initiation of a trigger will cause the instrument to store a trend plot of the rms voltage during the disturbance (both L-N and L-L rms plots will be recorded). This trend will include a minimum of 5 cycles of pre-trigger data, and 25 cycles of post-event data. The pre-event and post-event durations will be user-defined.
+- The monitor shall characterize rms disturbances according to the requirements of IEC 61000-4-30.
+- Both waveforms and rms plots will be recorded for rms disturbances.
+- The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.
+
+Requirements (Condensed):
+- The initiation of a trigger will cause the instrument to store the actual waveforms (voltage and current) during the disturbance. The waveform recording will include user-defined pre-event and post-event cycles.
+- The initiation of a trigger will cause the instrument to store a trend plot of the rms voltage during the disturbance (both L-N and L-L rms plots will be recorded). This trend will include a minimum of 5 cycles of pre-trigger data, and 25 cycles of post-event data. The pre-event and post-event durations will be user-defined.
+- The monitor shall characterize rms disturbances according to the requirements of IEC 61000-4-30.
+- Both waveforms and rms plots will be recorded for rms disturbances.
+- The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8110 |   3   | 3/5 (60%)  | The PM8110 is the low-voltage DC variant of the Essential power meter. It provides the same versatile power monitoring and WAGES metering with a color TFT display, but is designed for systems with a 20-60 V DC control power supply.
+  PowerLogic ION9000T |   3   | 3/5 (60%)  | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+  EasyLogic PM2130 |   3   | 3/5 (60%)  | The PM2130 is the premium LED display model, designed for applications needing higher Class 0.5S accuracy. It offers advanced power quality analysis with up to 31st order harmonics , data logging, alarms, and expandability with I/O modules, making it suitable for more critical monitoring and control tasks.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Original Requirement          | Condensed                     | PowerLogic PM8110  | PowerLogic ION9000T | EasyLogic PM2130   |
+|----------------------------------|----------------------------|--------------------|--------------------|--------------------|
+| The initiation of a trigger will cause the instrument to sto... | The initiation of a trigger will cause the instrument to ... |      ✔        |      ✔        |      ✔        |
+| The initiation of a trigger will cause the instrument to sto... | The initiation of a trigger will cause the instrument to ... |      ✔        |      ✔        |      ✔        |
+| The monitor shall characterize rms disturbances according to... | The monitor shall characterize rms disturbances according... |      ✔        |      ✔        |      ✔        |
+| Both waveforms and rms plots will be recorded for rms distur... | Both waveforms and rms plots will be recorded for rms dis... |      ✖        |      ✖        |      ✖        |
+| The unit will trigger on one-cycle or longer variations in t... | The unit will trigger on one-cycle or longer variations i... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8110: Missing [Both waveforms and rms plots will be recorded for rms disturbances. (from: Both waveforms and rms plots will be recorded for rms disturbances.), The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents. (from: The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.)]
+- PowerLogic ION9000T: Missing [Both waveforms and rms plots will be recorded for rms disturbances. (from: Both waveforms and rms plots will be recorded for rms disturbances.), The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents. (from: The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.)]
+- EasyLogic PM2130: Missing [Both waveforms and rms plots will be recorded for rms disturbances. (from: Both waveforms and rms plots will be recorded for rms disturbances.), The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents. (from: The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.)]
+
+Recommendation:
+- Best-fit: PowerLogic PM8110 (score: 3)
+  Consider relaxing: [Both waveforms and rms plots will be recorded for rms disturbances. (from: Both waveforms and rms plots will be recorded for rms disturbances.), The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents. (from: The unit will trigger on one-cycle or longer variations in the rms voltage level, outside user-defined thresholds. Triggering thresholds will be user-defined for both voltages (L-N and L-L) and currents.)]

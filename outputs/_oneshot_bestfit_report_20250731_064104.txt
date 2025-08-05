@@ -1,0 +1,72 @@
+=== Clause: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES ===
+
+Requirements:
+- Frequency ±0.5%
+- Voltage range 400V/230V
+- Current transformer secondary 5A
+- Accuracy class 0.5
+- Memory capacity for 36 months data
+- Total Harmonic Distortion (THD) up to 31st harmonic order ±1%
+- RS485 communication interface
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8140 |   3   | 3/7 (42%)  | The PM8140 is a versatile power meter with a color TFT display, designed for power monitoring and WAGES metering applications. It features a broad range of measurements, including harmonic distortion analysis up to the 63rd harmonic and waveform capture capabilities.
+  Acti9 iEM3110 |   3   | 3/7 (42%)  | The iEM3110 is a 63A direct-measure energy meter that builds on the basic model by adding a configurable pulse output for remote monitoring of energy consumption. It is suitable for integration with PLCs or other basic data acquisition systems.
+  PowerLogic PM8143 |   3   | 3/7 (42%)  | The PM8143 is the DIN rail-mounted version of the Essential feature set meter, designed for applications where an integrated display is not required. It offers the same core functionality as the PM8140 and can be connected to a remote display for local viewing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM8140  | Acti9 iEM3110      | PowerLogic PM8143  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Frequency ±0.5%                                              |      ✔        |      ✔        |      ✔        |
+| Voltage range 400V/230V                                      |      ✔        |      ✔        |      ✔        |
+| Current transformer secondary 5A                             |      ✔        |      ✔        |      ✔        |
+| Accuracy class 0.5                                           |      ✖        |      ✖        |      ✖        |
+| Memory capacity for 36 months data                           |      ✖        |      ✖        |      ✖        |
+| Total Harmonic Distortion (THD) up to 31st harmonic order... |      ✖        |      ✖        |      ✖        |
+| RS485 communication interface                                |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8140: Missing [Accuracy class 0.5, Memory capacity for 36 months data, Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, RS485 communication interface]
+- Acti9 iEM3110: Missing [Accuracy class 0.5, Memory capacity for 36 months data, Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, RS485 communication interface]
+- PowerLogic PM8143: Missing [Accuracy class 0.5, Memory capacity for 36 months data, Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, RS485 communication interface]
+
+Recommendation:
+- Best-fit: PowerLogic PM8140 (score: 3)
+  Consider relaxing: [Accuracy class 0.5, Memory capacity for 36 months data, Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, RS485 communication interface]
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined
+- Stores actual waveforms (voltage and current) during the disturbance with user-defined pre-event and post-event cycles
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Records both waveforms and rms plots for rms disturbances
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM8140 |   3   | 3/5 (60%)  | The PM8140 is a versatile power meter with a color TFT display, designed for power monitoring and WAGES metering applications. It features a broad range of measurements, including harmonic distortion analysis up to the 63rd harmonic and waveform capture capabilities.
+  Acti9 iEM3110 |   3   | 3/5 (60%)  | The iEM3110 is a 63A direct-measure energy meter that builds on the basic model by adding a configurable pulse output for remote monitoring of energy consumption. It is suitable for integration with PLCs or other basic data acquisition systems.
+  PowerLogic PM8143 |   3   | 3/5 (60%)  | The PM8143 is the DIN rail-mounted version of the Essential feature set meter, designed for applications where an integrated display is not required. It offers the same core functionality as the PM8140 and can be connected to a remote display for local viewing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM8140  | Acti9 iEM3110      | PowerLogic PM8143  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Stores a trend plot of the rms voltage during the disturb... |      ✔        |      ✔        |      ✔        |
+| Stores actual waveforms (voltage and current) during the ... |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✔        |      ✔        |      ✔        |
+| Records both waveforms and rms plots for rms disturbances    |      ✖        |      ✖        |      ✖        |
+| Triggers on one-cycle or longer variations in the rms vol... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM8140: Missing [Records both waveforms and rms plots for rms disturbances, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+- Acti9 iEM3110: Missing [Records both waveforms and rms plots for rms disturbances, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+- PowerLogic PM8143: Missing [Records both waveforms and rms plots for rms disturbances, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+
+Recommendation:
+- Best-fit: PowerLogic PM8140 (score: 3)
+  Consider relaxing: [Records both waveforms and rms plots for rms disturbances, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]

@@ -1,3 +1,4 @@
+---
 name: "One-Shot Clause Extraction and Best-Fit Recommendation"
 description: "Extracts clauses from a tender analysis file and runs FAISS semantic search to find the best-fit meters in a single flow."
 version: "1.0"
@@ -12,6 +13,17 @@ inputs:
     default: "C:/Users/cyqt2/Database/overhaul/jina_reranker/minilm-embedding"
     description: "(Optional) Embedding model to use for semantic search. Example: './jina_reranker/minilm-embedding'. If not set, uses this default."
 
+  # Optional: PDF manual FAISS index and metadata for RAG
+  - name: "pdf_faiss_index_path"
+    type: "text"
+    required: false
+    description: "(Optional) Path to a FAISS index file for PDF manual chunks. If provided, this will be used for semantic search instead of passing the full chunk list."
+  - name: "pdf_metadata_path"
+    type: "text"
+    required: false
+    description: "(Optional) Path to a JSON file containing metadata for the PDF manual chunks. Must match the FAISS index."
+
+
 processing_steps:
   # Step 0: Chunk the analysis file into smaller pieces for LLM clause extraction
   - name: "chunk_analysis_file"
@@ -20,80 +32,233 @@ processing_steps:
     code: |
       import re
       content = context['inputs']['analysis_file']['content']
-      # Simple chunking: split by section/clause headers, keeping the header
-      # with the following chunk. This is done using a positive lookahead `(?=...)`.
-      # This ensures each chunk (except the first) starts with its clause header,
-      # providing necessary context for the LLM.
-      chunks = re.split(r'(?=(?:Section \d+[A-Z]?|Clause \d+(?:\.\d+)*))', content)
-      # If not enough chunks, fallback to fixed-size chunks
-      if len(chunks) < 2:
+      # Improved chunking: split by major clause/section headers that are common in technical specifications
+      # Look for patterns like "1.20 METERS", "Clause 7.0", "Section 6.1", etc.
+      # This regex splits on lines that look like section or clause headers
+      header_regex = r'(?=^\s*(?:(?:\d+\.\d+(?:\.\d+)*\s+[A-Z][A-Za-z\s&-]+)|(?:Clause\s+\d+(?:\.\d+)*\s*[–-]\s*[A-Za-z\s]+)|(?:Section\s+\d+(?:\.\d+)*\s*[:\s]*[A-Za-z\s]*)|(?:\d+\.\d+\s+[A-Z][A-Z\s]+SPECIFICATIONS?))\s*$)'
+      chunks = re.split(header_regex, content, flags=re.MULTILINE)
+      # Recombine header and body for each chunk
+      combined_chunks = []
+      i = 0
+      while i < len(chunks):
+          if re.match(r'^\s*(Section \d+[A-Z]?|Clause \d+(?:\.\d+)*|\d+\.\d+\.?|[A-Z][A-Za-z ]+:)\s*$', chunks[i], flags=re.MULTILINE):
+              header = chunks[i].strip()
+              body = chunks[i+1].strip() if i+1 < len(chunks) else ''
+              combined = header + '\n' + body
+              combined_chunks.append(combined)
+              i += 2
+          else:
+              if chunks[i].strip():
+                  combined_chunks.append(chunks[i].strip())
+              i += 1
+      # Fallback to fixed-size chunks if not enough
+      if len(combined_chunks) < 2:
           chunk_size = 8000
-          chunks = [content[i:i+chunk_size] for i in range(0, len(content), chunk_size)]
+          combined_chunks = [content[i:i+chunk_size] for i in range(0, len(content), chunk_size)]
       # Remove empty or whitespace-only chunks
-      chunks = [c.strip() for c in chunks if c.strip()]
-      print(f"[DEBUG] Chunked analysis file into {len(chunks)} pieces.")
-      result = {'chunks': chunks}
+      combined_chunks = [c.strip() for c in combined_chunks if c.strip()]
+      print(f"[DEBUG] Chunked analysis file into {len(combined_chunks)} pieces.")
+      
+      # Debug: show sample chunks
+      for i, chunk in enumerate(combined_chunks[:3]):  # Show first 3 chunks
+          print(f"[DEBUG] Chunk {i+1} (first 200 chars): {repr(chunk[:200])}")
+      
+      result = {'chunks': combined_chunks}
 
-  # Step 0b: Debug - Show exactly what is passed to the LLM foreach step
-  - name: "debug_show_chunks_for_llm"
-    description: "Display exactly what is passed to the LLM foreach step, including type and content."
+  # Step 0b: If pdf_faiss_index_path and pdf_metadata_path are provided, inject them into context for downstream use
+  - name: "inject_pdf_faiss_index"
+    description: "If pdf_faiss_index_path and pdf_metadata_path are provided, inject them into the context for use as a RAG knowledge base."
     type: python
-    dependencies: [chunk_analysis_file]
     code: |
-      chunks = context['dep_chunk_analysis_file']['chunks']
-      print("[DEBUG] Chunks to be passed to LLM foreach step:")
-      for idx, chunk in enumerate(chunks):
-          print(f"[CHUNK {idx}] type={type(chunk)} length={len(chunk)}\n{repr(chunk)[:500]}")
-      result = {'chunks': chunks}
+      pdf_index_path = context['inputs'].get('pdf_faiss_index_path')
+      pdf_meta_path = context['inputs'].get('pdf_metadata_path')
+      if pdf_index_path and pdf_meta_path:
+          context['rag_pdf_faiss_index_path'] = pdf_index_path
+          context['rag_pdf_metadata_path'] = pdf_meta_path
+          print(f"[DEBUG] Using PDF FAISS index at {pdf_index_path} and metadata at {pdf_meta_path} for RAG.")
+      else:
+          print("[DEBUG] No PDF FAISS index/metadata provided; will use default database pipeline.")
 
-  # Step 1: Extract clauses from each chunk (chunked clause extraction)
-  - name: "extract_clauses"
-    description: "Extract meter requirements from each chunk of the analysis file (grouped by clause)"
+  # Step 0c: Use LLM to select only relevant chunks/sections for extraction
+  - name: "select_relevant_chunks"
+    description: "Use LLM to analyze document structure and select only relevant sections/chunks likely to contain measurable meter requirements."
     type: llm
     dependencies: [chunk_analysis_file]
-    foreach: context['chunk_analysis_file']['chunks']
+    foreach: dep_chunk_analysis_file['chunks']
+    pre_hook: |
+      print(f"[DEBUG] select_relevant_chunks processing chunk: {repr(item[:200])}")
+    post_hook: |
+      print(f"[DEBUG] select_relevant_chunks output: {result}")
+      print(f"[DEBUG] select_relevant_chunks output type: {type(result)}")
+    input: |
+      System message:
+      You are a requirements analysis assistant. Given the following document chunk, decide if it is a COMPLETE CLAUSE SECTION that contains measurable technical requirements for power meters.
+
+      A chunk is relevant ONLY if it:
+      1. Starts with a proper clause/section header (like "1.20 METERS", "Clause 7.0", "Section 6.1", etc.)
+      2. Contains the full clause content with specific technical requirements, measurements, or specifications
+      3. Is not just a fragment or partial content
+      
+      Reject chunks that are:
+      - Just lists of requirements without a proper clause header
+      - Fragments or partial content from the middle of a clause
+      - General prose without specific technical specifications
+      - Administrative, legal, or procedural text
+      
+      If the chunk is a complete, relevant clause section, return {"relevant": true, "chunk": <original chunk>}. 
+      If not, return {"relevant": false}.
+      
+      Chunk:
+      {{item}}
+    output_key: relevant_chunk_decision
+    timeout: 60
+
+
+  # Step 1: Preprocess relevant chunks for clause extraction
+  - name: "extract_relevant_chunks_for_clauses"
+    description: "Extracts only relevant chunk dicts from select_relevant_chunks, parsing raw_response if needed."
+    type: python
+    dependencies: [select_relevant_chunks]
+    code: |
+      import json
+      print(f"[DEBUG] select_relevant_chunks output count: {len(context['dep_select_relevant_chunks'])}")
+      relevant_chunks = []
+      for i, item in enumerate(context['dep_select_relevant_chunks']):
+          print(f"[DEBUG] Processing item {i}: {type(item)}")
+          print(f"[DEBUG] Item content: {repr(str(item)[:200])}")
+          
+          # If item is a dict with 'relevant' True
+          if isinstance(item, dict) and item.get('relevant'):
+              relevant_chunks.append(item)
+              print(f"[DEBUG] Added relevant chunk (direct dict)")
+          # If item is a dict with 'raw_response' (LLM output as string)
+          elif isinstance(item, dict) and 'raw_response' in item:
+              try:
+                  raw_response = item['raw_response'].strip()
+                  # Clean markdown
+                  if raw_response.startswith('```json'):
+                      raw_response = raw_response[7:].strip()
+                  if raw_response.endswith('```'):
+                      raw_response = raw_response[:-3].strip()
+                  
+                  data = json.loads(raw_response)
+                  if isinstance(data, dict) and (data.get('relevant') or data.get('chunk')):
+                      relevant_chunks.append(data)
+                      print(f"[DEBUG] Added relevant chunk (from raw_response)")
+                  else:
+                      print(f"[DEBUG] Chunk not relevant: {data.get('relevant', False)}")
+              except Exception as e:
+                  print(f"[WARN] Could not parse raw_response: {item['raw_response'][:100]}. Error: {e}")
+                  # Fallback: if it contains technical keywords, assume relevant
+                  raw_text = item['raw_response'].lower()
+                  if any(keyword in raw_text for keyword in ['accuracy', 'class', 'iec', 'voltage', 'current', 'harmonic', 'meter', 'measurement']):
+                      # Extract chunk from original chunked data
+                      chunk_text = item['raw_response']
+                      relevant_chunks.append({'relevant': True, 'chunk': chunk_text})
+                      print(f"[DEBUG] Added chunk via keyword fallback")
+          # If item is a string containing '"relevant": true' or looks like a technical chunk
+          elif isinstance(item, str):
+              if '"relevant": true' in item or any(keyword in item.lower() for keyword in ['accuracy', 'class', 'iec', 'voltage', 'current', 'harmonic', 'meter', 'measurement']):
+                  try:
+                      # Clean markdown
+                      clean_item = item.strip()
+                      if clean_item.startswith('```json'):
+                          clean_item = clean_item[7:].strip()
+                      if clean_item.endswith('```'):
+                          clean_item = clean_item[:-3].strip()
+                      
+                      data = json.loads(clean_item)
+                      if isinstance(data, dict) and (data.get('relevant') or data.get('chunk')):
+                          relevant_chunks.append(data)
+                          print(f"[DEBUG] Added relevant chunk (from string)")
+                  except Exception as e:
+                      print(f"[WARN] Could not parse string item: {item[:100]}. Error: {e}")
+                      # Fallback: assume the string itself is the chunk
+                      relevant_chunks.append({'relevant': True, 'chunk': item})
+                      print(f"[DEBUG] Added chunk as-is (string fallback)")
+          else:
+              print(f"[DEBUG] Skipping item of type {type(item)}")
+      
+      print(f"[DEBUG] Final relevant chunks count: {len(relevant_chunks)}")
+      result = {'relevant_chunks': relevant_chunks}
+
+  # Step 1b: Extract clauses from each relevant chunk (chunked clause extraction)
+  - name: "extract_clauses"
+    description: "Extract only measurable requirements/features from each chunk, grouped by clause, as strict valid JSON."
+    type: llm
+    dependencies: [extract_relevant_chunks_for_clauses]
+    foreach: dep_extract_relevant_chunks_for_clauses['relevant_chunks']
+    pre_hook: |
+      print(f"[DEBUG] extract_clauses foreach input: {context['dep_extract_relevant_chunks_for_clauses']['relevant_chunks']}")
+      print(f"[DEBUG] extract_clauses processing item: {item}")
+      print(f"[DEBUG] extract_clauses item type: {type(item)}")
+      if isinstance(item, dict):
+          print(f"[DEBUG] extract_clauses item keys: {list(item.keys())}")
+          if 'chunk' in item:
+              print(f"[DEBUG] extract_clauses chunk content (first 200 chars): {repr(item['chunk'][:200])}")
+    post_hook: |
+      print(f"[DEBUG] extract_clauses output: {result}")
+      print(f"[DEBUG] extract_clauses output type: {type(result)}")
+      if isinstance(result, dict):
+          print(f"[DEBUG] extract_clauses keys: {list(result.keys())}")
+          if 'raw_response' in result:
+              print(f"[DEBUG] extract_clauses raw_response (first 300 chars): {repr(result['raw_response'][:300])}")
     input: |
       IMPORTANT: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or any text before or after the JSON. DO NOT include ```json or any explanation. Output ONLY the JSON object, starting with { and ending with }. Your output MUST be valid JSON, never truncated, and must always end with the correct number of closing brackets and braces.
 
-      Extract all key meter requirements and specifications from the following tender analysis chunk, grouping them by clause or meter type (e.g., "Multi-Function Electronic Meters (1.20.4)", "Power Quality Meters (1.20.5)", etc.):
-      {{item}}
+      You are extracting requirements from a technical specification document chunk. 
+
+      For each chunk:
+      1. PRESERVE the original clause number/title exactly as it appears (e.g., "1.20 METERS AND INSTRUMENTS", "Clause 7.0 – Power Quality Meter")
+      2. Extract every measurable requirement, specification, or parameter as separate items
+      3. Include accuracy values, standards references, technical parameters, and measurements
+      4. Do NOT create artificial clause names - use the actual clause headers from the document
+      5. If no clear clause header exists, skip this chunk
+
+      For each identified clause section:
+      - Extract every measurable requirement, feature, or specification that could be used to select or recommend a power meter
+      - This includes every item in bullet lists, numbered lists, or tables
+      - Include all measurements, parameters, accuracies, and standards mentioned
+      - Do NOT summarize or group requirements; list each measurable feature as a separate item
+      - If a clause contains a table or list, extract each row or bullet as a separate feature
+
+      Tender analysis chunk:
+      {% if item is mapping and 'chunk' in item %}
+      {{ item['chunk'] }}
+      {% else %}
+      {{ item }}
+      {% endif %}
 
       Return your answer as a JSON object with:
-        - "requirements": a list of objects, one per clause, each with:
-            - "clause": the clause or meter type name
-            - "features": a list of all requirements/features for that clause
+        - "requirements": a list of objects, one per clause found in this chunk, each with:
+            - "clause": the EXACT clause number/title as it appears in the document (e.g., "1.20 METERS AND INSTRUMENTS")
+            - "features": a list of all requirements/features for that clause (one per measurable item)
             - "text": the full clause text (for semantic search)
-        - "text": the full extracted requirements section as a single string, including all bullet points and details (for semantic search and fallback extraction)
-
-      Example output:
-      {
-        "requirements": [
-          {
-            "clause": "Multi-Function Electronic Meters (1.20.4)",
-            "features": [
-              "True RMS Current ±0.5%",
-              "True RMS Volts ±0.5%"
-            ],
-            "text": "Full clause text here"
-          }
-        ],
-        "text": "- True RMS Current ±0.5%\n- True RMS Volts ±0.5%"
-      }
-
-      If you cannot find any requirements, return an empty list for "requirements" and an empty string for "text".
-
-      FINAL REMINDER: Output ONLY valid, complete JSON. DO NOT include any Markdown, code fences, or extra text. Double check that your output is never truncated and always ends with the correct number of closing brackets and braces. If you are unsure, repeat the output with all closing brackets and braces at the end.
+        - "text": the full chunk text as a single string
     output_key: chunked_clauses
     timeout: 60
 
   # Step 2: Inject FAISSProcessor into context (from faiss_clauses_bestfit.yaml)
   - name: "inject_faiss_processor"
-    description: "Inject FAISSProcessor into the pipeline context."
+    description: "Inject FAISSProcessor into the pipeline context, supporting both database and PDF FAISS index."
     type: python
     code: |
       from faiss_processor import FAISSProcessor
-      context['faiss_processor'] = FAISSProcessor()
-      print("[DEBUG] FAISSProcessor injected into context.")
+      context['faiss_processor_db'] = FAISSProcessor()
+      print("[DEBUG] FAISSProcessor (database) injected into context.")
+      
+      pdf_index_path = context.get('rag_pdf_faiss_index_path')
+      pdf_meta_path = context.get('rag_pdf_metadata_path')
+      if pdf_index_path and pdf_meta_path:
+          try:
+              context['faiss_processor_pdf'] = FAISSProcessor(faiss_index_path=pdf_index_path, metadata_path=pdf_meta_path)
+              print(f"[DEBUG] FAISSProcessor (PDF) loaded from {pdf_index_path} and {pdf_meta_path}.")
+          except Exception as e:
+              print(f"[ERROR] Could not load PDF FAISSProcessor: {e}")
+              context['faiss_processor_pdf'] = None
+      else:
+          context['faiss_processor_pdf'] = None
+          print("[DEBUG] No PDF FAISS index/metadata for FAISSProcessor (PDF). Only database will be used.")
 
   # Step 3: Load clauses from all chunked LLM outputs
   - name: "load_clauses_from_memory"
@@ -101,47 +266,157 @@ processing_steps:
     type: python
     dependencies: [extract_clauses]
     code: |
+      print(f"[DEBUG] load_clauses_from_memory raw input: {context.get('dep_extract_clauses', [])}")
       import json
       import re
       chunked_outputs = context.get('dep_extract_clauses', [])
+      print(f"[DEBUG] Number of chunked outputs: {len(chunked_outputs)}")
+      
       clause_map = {}
-      for raw in chunked_outputs:
+      for i, raw in enumerate(chunked_outputs):
+          print(f"[DEBUG] Processing chunked output {i}: {type(raw)}")
+          print(f"[DEBUG] Raw content (first 300 chars): {repr(str(raw)[:300])}")
+          
           # Accept both dict and string outputs from LLM step
           if isinstance(raw, dict) and 'raw_response' in raw:
               raw_string = raw['raw_response']
+              print(f"[DEBUG] Extracted raw_response: {repr(raw_string[:200])}")
+          elif isinstance(raw, dict) and 'success' in raw and raw.get('success'):
+              # Handle case where the dict is the actual parsed result
+              if 'clause' in raw and 'features' in raw:
+                  print(f"[DEBUG] Found direct clause data in dict")
+                  name = raw.get('clause')
+                  if name:
+                      if name not in clause_map:
+                          clause_map[name] = {'features': set(), 'text': []}
+                      clause_map[name]['features'].update(raw.get('features', []))
+                      if raw.get('text'):
+                          clause_map[name]['text'].append(raw['text'])
+                  continue
+              else:
+                  raw_string = str(raw)
           elif isinstance(raw, str):
               raw_string = raw
           else:
               raw_string = str(raw)
+              print(f"[DEBUG] Converting unknown type to string: {type(raw)}")
 
           # Remove any markdown code fences and extra text
-          # Accept output that is either a valid JSON string or a dict
-          # Try direct JSON parse first
+          raw_string = raw_string.strip()
+          
+          # Clean markdown code fences
+          if raw_string.startswith('```json'):
+              raw_string = raw_string[7:].strip()
+          elif raw_string.startswith('```'):
+              raw_string = raw_string[3:].strip()
+          
+          if raw_string.endswith('```'):
+              raw_string = raw_string[:-3].strip()
+          
+          # Try to parse JSON
           data = None
           try:
+              # First try direct JSON parse
               data = json.loads(raw_string)
-          except Exception:
-              # If not valid JSON, try to extract JSON object from string
-              json_match = re.search(r'\{.*\}', raw_string, re.DOTALL)
-              if json_match:
-                  json_string = json_match.group(0)
+              print(f"[DEBUG] Direct JSON parse successful for output {i}")
+          except Exception as e:
+              print(f"[DEBUG] Direct JSON parse failed for output {i}: {e}")
+              
+              # Try to find JSON object in the string
+              import re
+              json_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
+              json_matches = re.findall(json_pattern, raw_string, re.DOTALL)
+              
+              for match in json_matches:
                   try:
-                      data = json.loads(json_string)
-                  except Exception:
-                      data = None
+                      data = json.loads(match)
+                      print(f"[DEBUG] Regex JSON extraction successful for output {i}")
+                      break
+                  except:
+                      continue
+              
+              if not data:
+                  print(f"[DEBUG] Could not parse JSON from output {i}, attempting fallback extraction")
+                  # Last resort: try to extract clause headers and content manually
+                  if any(keyword in raw_string.lower() for keyword in ['accuracy', 'class', 'voltage', 'current', 'meter', 'iec', 'harmonic']):
+                      # Try to find a clause header in the content
+                      import re
+                      clause_patterns = [
+                          r'(\d+\.\d+(?:\.\d+)*\s+[A-Z][A-Za-z\s&-]+)',  # "1.20 METERS AND INSTRUMENTS"
+                          r'(Clause\s+\d+(?:\.\d+)*\s*[–-]\s*[A-Za-z\s]+)',  # "Clause 7.0 – Power Quality Meter"
+                          r'(Section\s+\d+(?:\.\d+)*\s*[:-]*\s*[A-Za-z\s]*)',  # "Section 6.1: ..."
+                      ]
+                      
+                      clause_name = None
+                      for pattern in clause_patterns:
+                          match = re.search(pattern, raw_string)
+                          if match:
+                              clause_name = match.group(1).strip()
+                              break
+                      
+                      if not clause_name:
+                          clause_name = f'Extracted Technical Section {i+1}'
+                      
+                      # Extract bullet points or numbered items as features
+                      feature_patterns = [
+                          r'[-•]\s*([^\n]+)',  # Bullet points
+                          r'\d+\.\d+\.\d+\s+([^\n]+)',  # Numbered sub-items
+                          r'(?:^|\n)\s*([A-Z][^.!?]*(?:±\d+(?:\.\d+)?%|IEC\s+\d+|Class\s+\d+(?:\.\d+)?[A-Z]?)[^.!?\n]*)',  # Technical statements
+                      ]
+                      
+                      features = []
+                      for pattern in feature_patterns:
+                          matches = re.findall(pattern, raw_string, re.MULTILINE | re.IGNORECASE)
+                          features.extend([m.strip() for m in matches if len(m.strip()) > 10])
+                      
+                      if not features:
+                          # If no structured features found, use the whole text as a single feature
+                          features = [raw_string.strip()]
+                      
+                      data = {
+                          'requirements': [{
+                              'clause': clause_name,
+                              'features': features[:20],  # Limit to first 20 features to avoid noise
+                              'text': raw_string.strip()
+                          }],
+                          'text': raw_string.strip()
+                      }
+                      print(f"[DEBUG] Created fallback clause '{clause_name}' with {len(features)} features")
+                  else:
+                      print(f"[DEBUG] No technical keywords found, skipping output {i}")
+                      continue
+          
+          # Handle the JSON structure from clause extraction
           if isinstance(data, dict):
-              chunk_clauses = data.get('requirements', [])
-              if isinstance(chunk_clauses, list):
-                  for clause in chunk_clauses:
-                      name = clause.get('clause')
-                      if not name:
-                          continue
+              # The new prompt returns a structure with 'requirements' list
+              if 'requirements' in data:
+                  chunk_clauses = data.get('requirements', [])
+                  if isinstance(chunk_clauses, list):
+                      for clause in chunk_clauses:
+                          name = clause.get('clause')
+                          if not name:
+                              continue
+                          if name not in clause_map:
+                              clause_map[name] = {'features': set(), 'text': []}
+                          clause_map[name]['features'].update(clause.get('features', []))
+                          if clause.get('text'):
+                              clause_map[name]['text'].append(clause['text'])
+                          print(f"[DEBUG] Added clause '{name}' with {len(clause.get('features', []))} features")
+              # Fallback: single clause object (with 'clause', 'features', 'text')
+              elif 'clause' in data and 'features' in data:
+                  name = data.get('clause')
+                  if name:
                       if name not in clause_map:
                           clause_map[name] = {'features': set(), 'text': []}
-                      clause_map[name]['features'].update(clause.get('features', []))
-                      if clause.get('text'):
-                          clause_map[name]['text'].append(clause['text'])
-          # If data is not a dict, skip this chunk
+                      clause_map[name]['features'].update(data.get('features', []))
+                      if data.get('text'):
+                          clause_map[name]['text'].append(data['text'])
+                      print(f"[DEBUG] Added clause '{name}' with {len(data.get('features', []))} features")
+              else:
+                  print(f"[DEBUG] Dict doesn't match expected format: {list(data.keys())}")
+          else:
+              print(f"[DEBUG] Data is not a dict after parsing: {type(data)}")
+      
       # Final output: deduplicated and merged clauses
       deduped_clauses = []
       for name, data in clause_map.items():
@@ -150,187 +425,458 @@ processing_steps:
               'features': list(data['features']),
               'text': '\n'.join(data['text'])
           })
+      
+      print(f"[DEBUG] Final clause count: {len(deduped_clauses)}")
+      for clause in deduped_clauses:
+          print(f"[DEBUG] Clause '{clause['clause']}' has {len(clause['features'])} features")
+      
       result = {'clauses': deduped_clauses}
 
 
-  # Step 4: Use LLM to break down features (from faiss_clauses_bestfit.yaml)
-  - name: "llm_breakdown_features"
-    description: "Use the LLM to break down each feature into atomic requirements for FAISS search."
+  # Step 4: Condense/normalize features for semantic search
+  - name: "condense_features_for_semantic_search"
+    description: "Condense and normalize each feature into a canonical, semantically meaningful form for better embedding and reranker matching."
     type: llm
     dependencies: [load_clauses_from_memory]
-    foreach: context['load_clauses_from_memory']['clauses']
+    foreach: dep_load_clauses_from_memory['clauses']
+    # DEBUG: Log input to condense_features_for_semantic_search
+    pre_hook: |
+      print(f"[DEBUG] condense_features foreach input item: {item}")
+      print(f"[DEBUG] condense_features clause: {item.get('clause', 'N/A')}")
+      print(f"[DEBUG] condense_features features count: {len(item.get('features', []))}")
+      print(f"[DEBUG] condense_features sample features: {item.get('features', [])[:3]}")
+    post_hook: |
+      print(f"[DEBUG] condense_features output for clause {item.get('clause', 'N/A')}: {result}")
+      print(f"[DEBUG] condense_features output type: {type(result)}")
+      if hasattr(result, 'get'):
+          print(f"[DEBUG] condense_features raw_response: {result.get('raw_response', 'N/A')[:200]}...")
     input: |
-      You are an expert requirements engineer. For each feature in the clause below, break it down into a list of atomic, normalized requirements suitable for semantic search in a requirements database. 
+      You are an expert in requirements engineering and semantic search. For each feature in the clause below, condense and normalize it into a very short, canonical, and easily queriable form (ideally 2-5 words) that captures the core requirement, suitable for semantic search and matching against product specifications. Use the shortest possible phrase that is still unambiguous, but always retain any measurement, value, or accuracy (e.g., "0.5%", "0.2", "Class A", etc.) in the condensed form. Do not remove or generalize away any numbers, percentages, or accuracy classes present in the original feature.
       
-      Return ONLY a valid JSON object mapping each original feature string to a list of atomic requirements. 
-      Do not include any explanation, greeting, or extra text. 
-      If a feature is already atomic, return it as a single-item list. 
+      Return ONLY a valid JSON object mapping each original feature string to its condensed/normalized form. Do not include any explanation, greeting, or extra text.
       
       Example output:
-      {"Feature 1": ["atomic req 1", "atomic req 2"], "Feature 2": ["atomic req 3"]}
+      {"True RMS Current: per phase & neutral ±0.5%": "RMS current ±0.5%", "Total Harmonic Distortion (THD): per phase, voltage & current (at ±1% least up to 31st harmonic order)": "THD up to 31st", "Accuracy Class 0.5 meters": "Accuracy class 0.5", "Data from the meter shall be collected via built-in communication interface Modbus RTU (RS485)": "Modbus communication"}
       
-      Clause: {{item['clause']}}
+      Clause: {{item.clause}}
       Features:
-      {% for feature in item['features'] %}
+      {% for feature in item.features %}
       - {{feature}}
       {% endfor %}
-    output_key: atomic_requirements_by_feature
+    output_key: condensed_features_by_feature
 
-  # Step 5: Aggregate atomic requirements (from faiss_clauses_bestfit.yaml)
-  - name: "aggregate_atomic_requirements"
-    description: "Aggregate atomic requirements from all clauses into a single mapping."
+  # Step 5: Aggregate condensed features from all clauses into a single mapping
+  - name: "aggregate_condensed_features"
+    description: "Aggregate condensed/normalized features from all clauses into a single mapping."
     type: python
-    dependencies: [llm_breakdown_features]
+    dependencies: [condense_features_for_semantic_search, load_clauses_from_memory]
     code: |
       import json
-      # The result from a 'foreach' LLM step is a list of dictionaries (or strings).
-      list_of_atomic_maps = context.get('dep_llm_breakdown_features', [])
-      print(f"[DEBUG] Received list of atomic maps from LLM breakdown: {list_of_atomic_maps}")
+      list_of_condensed_maps = context.get('dep_condense_features_for_semantic_search', [])
+      print(f"[DEBUG] Received list of condensed feature maps (length: {len(list_of_condensed_maps)}): {list_of_condensed_maps}")
+      print(f"[DEBUG] Types of items in list: {[type(item) for item in list_of_condensed_maps]}")
+      for i, item in enumerate(list_of_condensed_maps):
+          print(f"[DEBUG] Item {i}: {repr(item)[:500]}...")  # Show first 500 chars
+      
+      # Check if load_clauses_from_memory has any clauses
+      loaded_clauses = context.get('dep_load_clauses_from_memory', {}).get('clauses', [])
+      print(f"[DEBUG] Number of clauses from load_clauses_from_memory: {len(loaded_clauses)}")
+      if loaded_clauses:
+          print(f"[DEBUG] Sample clause: {loaded_clauses[0].get('clause', 'N/A')}")
+          print(f"[DEBUG] Sample features count: {len(loaded_clauses[0].get('features', []))}")
+      else:
+          print("[ERROR] No clauses found in load_clauses_from_memory! Pipeline may have failed earlier.")
 
-      final_atomic_map = {}
-      # The LLM is supposed to return a JSON string which gets parsed into a dict.
-      # Sometimes it might just be a dict. Handle both cases.
-      for item in list_of_atomic_maps:
-          atomic_map = {}
-          # The item could be a string (JSON) or already a dict
-          if isinstance(item, str):
-              try:
-                  # The LLM might wrap the JSON in markdown
-                  if '```json' in item:
-                      item = item.split('```json\\n', 1)[1].split('```', 1)[0]
-                  atomic_map = json.loads(item)
-              except (json.JSONDecodeError, IndexError) as e:
-                  print(f"[ERROR] Could not parse JSON from LLM breakdown output: {item}. Error: {e}")
+      final_condensed_map = {}
+      
+      if not list_of_condensed_maps:
+          print("[WARN] No condensed feature maps received. Using original features from load_clauses_from_memory as fallback.")
+          # Fallback: use original features from load_clauses_from_memory
+          clauses = context.get('dep_load_clauses_from_memory', {}).get('clauses', [])
+          for clause in clauses:
+              features = clause.get('features', [])
+              for feature in features:
+                  # Use feature as-is if no condensed version available
+                  final_condensed_map[feature] = feature
+          print(f"[DEBUG] Created fallback condensed map with {len(final_condensed_map)} features")
+      else:
+          for idx, item in enumerate(list_of_condensed_maps):
+              condensed_map = {}
+              # Handle dict with raw_response
+              if isinstance(item, dict) and 'raw_response' in item:
+                  raw_text = item['raw_response']
+                  try:
+                      # Clean JSON markers more robustly
+                      if '```json' in raw_text:
+                          parts = raw_text.split('```json')
+                          if len(parts) > 1:
+                              json_part = parts[1].split('```')[0]
+                              raw_text = json_part.strip()
+                      elif '```' in raw_text:
+                          parts = raw_text.split('```')
+                          if len(parts) >= 3:
+                              raw_text = parts[1].strip()
+                          elif len(parts) == 2:
+                              # Try both parts to see which one is JSON
+                              for part in parts:
+                                  try:
+                                      json.loads(part.strip())
+                                      raw_text = part.strip()
+                                      break
+                                  except:
+                                      continue
+                      condensed_map = json.loads(raw_text.strip())
+                  except (json.JSONDecodeError, IndexError) as e:
+                      print(f"[ERROR] Could not parse JSON from LLM raw_response at index {idx}: {raw_text}. Error: {e}")
+                      continue
+              # Handle direct dict
+              elif isinstance(item, dict):
+                  condensed_map = item
+              # Handle string response
+              elif isinstance(item, str):
+                  try:
+                      # Clean JSON markers more robustly
+                      raw_text = item
+                      if '```json' in raw_text:
+                          parts = raw_text.split('```json')
+                          if len(parts) > 1:
+                              json_part = parts[1].split('```')[0]
+                              raw_text = json_part.strip()
+                      elif '```' in raw_text:
+                          parts = raw_text.split('```')
+                          if len(parts) >= 3:
+                              raw_text = parts[1].strip()
+                          elif len(parts) == 2:
+                              # Try both parts to see which one is JSON
+                              for part in parts:
+                                  try:
+                                      json.loads(part.strip())
+                                      raw_text = part.strip()
+                                      break
+                                  except:
+                                      continue
+                      condensed_map = json.loads(raw_text.strip())
+                  except (json.JSONDecodeError, IndexError) as e:
+                      print(f"[ERROR] Could not parse JSON from string at index {idx}: {item}. Error: {e}")
+                      continue
+              else:
+                  print(f"[WARN] Expected a dictionary or string from LLM condensed, but got {type(item)} at index {idx}")
                   continue
-          elif isinstance(item, dict):
-              atomic_map = item
-          
-          if isinstance(atomic_map, dict):
-              final_atomic_map.update(atomic_map)
-          else:
-              print(f"[WARN] Expected a dictionary from LLM breakdown, but got {type(atomic_map)}")
+              
+              if isinstance(condensed_map, dict):
+                  final_condensed_map.update(condensed_map)
+              else:
+                  print(f"[WARN] Expected a dictionary from LLM condensed, but got {type(condensed_map)} at index {idx}")
 
-      if not final_atomic_map:
-          print("[WARN] The final aggregated atomic map is empty.")
+          if not final_condensed_map:
+              print("[WARN] The final aggregated condensed map is empty. Using original features as fallback.")
+              # Fallback: use original features as keys and values
+              for clause in context.get('dep_load_clauses_from_memory', {}).get('clauses', []):
+                  for feature in clause.get('features', []):
+                      final_condensed_map[feature] = feature
 
-      print(f"[DEBUG] Aggregated atomic requirements: {final_atomic_map}")
-      result = {'atomic_requirements_by_feature': final_atomic_map}
+      print(f"[DEBUG] Aggregated condensed features (final count: {len(final_condensed_map)})")
+      # Print a sample to debug
+      if final_condensed_map:
+          sample_items = list(final_condensed_map.items())[:3]
+          print(f"[DEBUG] Sample condensed features: {sample_items}")
+      result = {'condensed_features_by_feature': final_condensed_map}
 
-  # Step 6: Run semantic search (from faiss_clauses_bestfit.yaml)
+  # Step 6: Run semantic search using condensed features
   - name: "faiss_semantic_search_by_clause"
-    description: "For each clause, run FAISS semantic search on each feature and aggregate meter hits using atomic requirements."
+    description: "For each clause, run FAISS semantic search on each condensed feature using both database and PDF chunks, and aggregate meter hits."
     type: python
-    dependencies: [load_clauses_from_memory, aggregate_atomic_requirements, inject_faiss_processor]
+    dependencies: [load_clauses_from_memory, aggregate_condensed_features, inject_faiss_processor]
     code: |
-      faiss_processor = context.get('faiss_processor')
-      if not faiss_processor:
-          raise RuntimeError("FAISS processor is not available in context.")
+      faiss_processor_db = context.get('faiss_processor_db')
+      faiss_processor_pdf = context.get('faiss_processor_pdf')
+      
+      if not faiss_processor_db:
+          raise RuntimeError("FAISS processor (database) is not available in context. Please ensure FAISS and dependencies are properly installed.")
+      
       results = []
+      condensed_map = context.get('dep_aggregate_condensed_features', {}).get('condensed_features_by_feature', {})
+      TOP_K = 100
       for clause in context['dep_load_clauses_from_memory']['clauses']:
           meter_counts = {}
           feature_results = []
           print(f"[DEBUG] Processing clause: {clause['clause']}")
-          atomic_map = context.get('dep_aggregate_atomic_requirements', {}).get('atomic_requirements_by_feature', {})
           for feature in clause['features']:
               feature_str = str(feature)
-              if feature_str not in atomic_map:
-                  print(f"[DEBUG] Feature key not found in atomic_map: {feature_str}")
-                  print(f"[DEBUG] Available keys: {list(atomic_map.keys())}")
-              atomic_reqs = atomic_map.get(feature_str)
-              if isinstance(atomic_reqs, str):
-                  atomic_reqs = [atomic_reqs]
-              elif not atomic_reqs:
-                  atomic_reqs = [feature_str]
+              condensed = condensed_map.get(feature_str, feature_str)
               all_meters = []
               all_raw_results = []
-              for atomic in atomic_reqs:
-                  if not atomic or not str(atomic).strip():
-                      continue  # Skip empty atomic requirements
-                  print(f"[DEBUG] Querying FAISS with atomic requirement: {atomic}")
-                  faiss_results = faiss_processor.query_faiss(atomic, top_k=3)
-                  print(f"[DEBUG] FAISS results for atomic '{atomic}': {faiss_results}")
-                  for idx, r in enumerate(faiss_results):
-                      print(f"[DEBUG] Raw FAISS result {idx} for '{atomic}': {r}")
-                  meters = []
-                  for r in faiss_results:
-                      if 'meter' in r:
-                          meters.append(r['meter'])
-                      elif 'model_name' in r:
-                          meters.append(r['model_name'])
-                      elif 'metadata' in r and isinstance(r['metadata'], dict):
-                          if 'meter' in r['metadata']:
-                              meters.append(r['metadata']['meter'])
-                          elif 'model_name' in r['metadata']:
-                              meters.append(r['metadata']['model_name'])
-                  if not meters:
-                      print(f"[DEBUG] No 'meter' field found in FAISS results for '{atomic}'. Available keys: {[list(r.keys()) for r in faiss_results]}")
-                  for meter in meters:
-                      meter_counts[meter] = meter_counts.get(meter, 0) + 1
-                  all_meters.extend(meters)
-                  all_raw_results.extend(faiss_results)
-              feature_results.append({'feature': feature_str, 'atomic_requirements': atomic_reqs, 'meters': all_meters, 'raw_results': all_raw_results})
-          ranked = sorted(meter_counts.items(), key=lambda x: x[1], reverse=True)
-          top3 = [{'meter': m, 'hits': c} for m, c in ranked[:3]]
+              # Query database
+              print(f"[DEBUG] Querying FAISS (database) with condensed feature: {condensed}, top_k={TOP_K}")
+              faiss_results_db = faiss_processor_db.query_faiss(condensed, top_k=TOP_K)
+              # Query PDF chunks if available
+              if faiss_processor_pdf:
+                  print(f"[DEBUG] Querying FAISS (PDF) with condensed feature: {condensed}, top_k={TOP_K}")
+                  faiss_results_pdf = faiss_processor_pdf.query_faiss(condensed, top_k=TOP_K)
+              else:
+                  faiss_results_pdf = []
+              # Merge and deduplicate results
+              faiss_results = faiss_results_db + faiss_results_pdf
+              print(f"[DEBUG] FAISS results (combined) for condensed '{condensed}': {len(faiss_results)} results")
+              meters = []
+              for r in faiss_results:
+                  if 'meter' in r:
+                      meters.append(r['meter'])
+                  elif 'model_name' in r:
+                      meters.append(r['model_name'])
+                  elif 'metadata' in r and isinstance(r['metadata'], dict):
+                      if 'meter' in r['metadata']:
+                          meters.append(r['metadata']['meter'])
+                      elif 'model_name' in r['metadata']:
+                          meters.append(r['metadata']['model_name'])
+                  # If PDF chunk, try to infer meter from 'source' (filename)
+                  elif 'source' in r:
+                      # Heuristic: use filename (strip extension and extra text)
+                      meter_name = r['source'].split('.')[0].replace('_', ' ').replace('-', ' ').strip()
+                      meters.append(meter_name)
+              # Deduplicate meters
+              meters = list(set(meters))
+              if not meters:
+                  print(f"[DEBUG] No 'meter' field found in FAISS results for '{condensed}'. Available keys: {[list(r.keys()) for r in faiss_results[:3]]}")
+              for meter in meters:
+                  meter_counts[meter] = meter_counts.get(meter, 0) + 1
+              all_meters.extend(meters)
+              all_raw_results.extend(faiss_results)
+              feature_results.append({'feature': feature_str, 'condensed': condensed, 'meters': all_meters, 'raw_results': all_raw_results})
+          # Do NOT truncate to top3 here; let the reranker see all candidates
           results.append({
               'clause': clause['clause'],
-              'top_meters': top3,
+              'meter_counts': meter_counts,
               'feature_results': feature_results
           })
-      result = {'results': results}
+      # Output a dict mapping each clause to its feature_results for reranker compatibility
+      result = {'results': {clause['clause']: clause['feature_results'] for clause in results}}
 
-  # Step 7: Generate human-readable report from FAISS results
-  - name: "generate_meter_report"
-    description: "Generate a human-readable report summarizing the top three meters per clause, their scores, and a blurb on their shortcomings."
-    type: python
+  # Step 6b: Rerank FAISS results using cross-encoder
+  - name: "rerank_semantic_results"
+    description: "Rerank FAISS semantic search results using a cross-encoder for higher accuracy."
+    type: reranker
     dependencies: [faiss_semantic_search_by_clause]
+    # No code needed; handled by prompt_engine reranker logic
+
+  # Step 7: Generate human-readable report from reranked results if available, else FAISS results
+  - name: "generate_meter_report"
+    description: "Generate a comprehensive human-readable report with meter ranking, compliance matrix, and recommendations."
+    type: python
+    dependencies: [rerank_semantic_results, faiss_semantic_search_by_clause]
     code: |
-      results = context['dep_faiss_semantic_search_by_clause']['results']
-      # Map clause name to full clause text for context
-      clause_text_map = {}
-      for clause_obj in context.get('dep_load_clauses_from_memory', {}).get('clauses', []):
-          if isinstance(clause_obj, dict) and 'clause' in clause_obj and 'text' in clause_obj:
-              clause_text_map[clause_obj['clause']] = clause_obj['text']
-      report_lines = []
-      for clause_result in results:
-          clause = clause_result['clause']
-          top_meters = clause_result['top_meters']
-          feature_results = clause_result['feature_results']
-          report_lines.append(f"\n=== Clause: {clause} ===\n")
-          # Add the full clause text for context if available
-          clause_text = clause_text_map.get(clause)
-          if clause_text:
-              report_lines.append(f"Clause Text:\n{clause_text}\n")
-          for idx, meter_info in enumerate(top_meters):
-              meter = meter_info['meter']
-              hits = meter_info['hits']
-              # Find all features this meter matched
-              matched_features = []
-              missed_features = []
-              for feat in feature_results:
-                  if meter in feat['meters']:
-                      matched_features.append(feat['feature'])
-                  else:
-                      missed_features.append(feat['feature'])
-              # Try to get a blurb from raw_results
-              blurb = None
-              for feat in feature_results:
-                  for r in feat['raw_results']:
-                      meta = r.get('metadata', {})
-                      if meta.get('model_name') == meter or meta.get('meter') == meter or r.get('meter') == meter:
-                          blurb = meta.get('selection_blurb')
-                          if blurb:
-                              break
-                  if blurb:
+      # Prefer reranked results if available
+      results = context.get('dep_rerank_semantic_results', {}).get('results')
+      if not results:
+          results = context.get('dep_faiss_semantic_search_by_clause', {}).get('results')
+      
+      print(f"[DEBUG] Final results available: {results is not None}")
+      if results:
+          print(f"[DEBUG] Results type: {type(results)}")
+          print(f"[DEBUG] Results keys: {list(results.keys()) if isinstance(results, dict) else 'Not a dict'}")
+      
+      if not results or not isinstance(results, dict):
+          print("[ERROR] No meter search results were found. The semantic search did not return any candidates for the extracted requirements.")
+          print("[INFO] This could be due to:")
+          print("1. No matching meters in the database for the given requirements")
+          print("2. Requirements are too specific or use terminology not in the database")
+          print("3. FAISS search parameters need adjustment")
+          
+          # Generate a basic report with extracted clauses even if no search results
+          clauses = context.get('dep_load_clauses_from_memory', {}).get('clauses', [])
+          if clauses:
+              report_lines = []
+              report_lines.append("🔍 CLAUSE EXTRACTION REPORT")
+              report_lines.append("=" * 50)
+              report_lines.append(f"✅ Successfully extracted {len(clauses)} clauses from the document:")
+              report_lines.append("")
+              
+              for i, clause in enumerate(clauses, 1):
+                  report_lines.append(f"{i}. {clause.get('clause', 'Unknown Clause')}")
+                  features = clause.get('features', [])
+                  report_lines.append(f"   Features extracted: {len(features)}")
+                  for feature in features[:5]:  # Show first 5 features
+                      report_lines.append(f"   - {feature}")
+                  if len(features) > 5:
+                      report_lines.append(f"   ... and {len(features) - 5} more features")
+                  report_lines.append("")
+              
+              report_lines.append("⚠️  NO MATCHING METERS FOUND")
+              report_lines.append("The semantic search could not find meters matching the extracted requirements.")
+              report_lines.append("Consider:")
+              report_lines.append("- Reviewing if the requirements match available meter capabilities")
+              report_lines.append("- Checking if the database contains suitable meters")
+              report_lines.append("- Adjusting search parameters or expanding the meter database")
+              
+              result = {'report': '\n'.join(report_lines)}
+          else:
+              result = {'report': 'No clauses were extracted from the document and no meter search results were found. Please check your input data and pipeline configuration.'}
+      else:
+          clause_text_map = {}
+          for clause_obj in context.get('dep_load_clauses_from_memory', {}).get('clauses', []):
+              if isinstance(clause_obj, dict) and 'clause' in clause_obj and 'text' in clause_obj:
+                  clause_text_map[clause_obj['clause']] = clause_obj['text']
+          report_lines = []
+          # Patch: iterate over dict items (clause, feature_results)
+          # Use condensed features for reporting
+          condensed_map = context.get('dep_aggregate_condensed_features', {}).get('condensed_features_by_feature', {})
+          # Collect PDF-derived meters for reporting
+          pdf_meters = set()
+          pdf_meter_details = {}
+          for clause, feature_results in results.items():
+              # print(f"[DEBUG] Processing clause: {clause}")
+              # print(f"[DEBUG] feature_results type: {type(feature_results)}")
+              report_lines.append(f"\n=== Clause: {clause} ===\n")
+              # Print the requirements (feature list) for the clause (full/original and condensed)
+              full_feature_list = None
+              for clause_obj in context.get('dep_load_clauses_from_memory', {}).get('clauses', []):
+                  if clause_obj.get('clause') == clause:
+                      full_feature_list = clause_obj.get('features', [])
                       break
-              report_lines.append(f"{idx+1}. {meter} (Score: {hits})")
-              if blurb:
-                  report_lines.append(f"   - Description: {blurb}")
-              if missed_features:
-                  report_lines.append(f"   - Shortcomings: Does not meet: {', '.join(missed_features)}")
+              if full_feature_list:
+                  report_lines.append("Requirements (Original):")
+                  for feat in full_feature_list:
+                      report_lines.append(f"- {feat}")
+                  report_lines.append("")
+                  # Also show condensed forms for transparency
+                  report_lines.append("Requirements (Condensed):")
+                  for feat in full_feature_list:
+                      condensed = condensed_map.get(feat, feat)
+                      report_lines.append(f"- {condensed}")
+                  report_lines.append("")
+              if not isinstance(feature_results, list) or len(feature_results) == 0:
+                  report_lines.append("Top 3 Meter Ranking:")
+                  report_lines.append("  Meter        | Score | Compliance | Description")
+                  report_lines.append("  ------------ | ----- | ---------- | -----------")
+                  report_lines.append("\nFeature Compliance Matrix (Top 3 Meters):")
+                  report_lines.append("| Feature                            |")
+                  report_lines.append("|----------------------------------|")
+                  report_lines.append("\nShortcomings by Meter (Top 3):")
+                  report_lines.append("\nRecommendation:")
+                  report_lines.append("- No meter meets any requirements.")
+                  report_lines.append("")
+                  continue
+              # Build meter stats
+              meter_stats = {}
+              all_meters = set()
+              for feat in feature_results:
+                  for meter in feat.get('meters', []):
+                      all_meters.add(meter)
+              for meter in all_meters:
+                  meter_stats[meter] = {'matched': [], 'missed': [], 'score': 0, 'blurb': None}
+              # Identify PDF-derived meters by checking feature_results' raw_results
+              for feat in feature_results:
+                  for r in feat.get('raw_results', []):
+                      # Heuristic: if 'source' in r or r['metadata'] has 'pdf_source' or similar, mark as PDF
+                      if 'source' in r:
+                          meter_name = r['source'].split('.')[0].replace('_', ' ').replace('-', ' ').strip()
+                          pdf_meters.add(meter_name)
+                          pdf_meter_details[meter_name] = r.get('metadata', {})
+                      elif 'metadata' in r and isinstance(r['metadata'], dict):
+                          meta = r['metadata']
+                          # If metadata has a field indicating PDF origin, e.g., 'pdf_source' or 'source'
+                          if meta.get('pdf_source') or meta.get('source'):
+                              meter_name = meta.get('model_name') or meta.get('meter') or meta.get('product_name')
+                              if meter_name:
+                                  pdf_meters.add(meter_name)
+                                  pdf_meter_details[meter_name] = meta
+              # Use the full feature list for compliance matrix and shortcomings
+              # Build a mapping from feature string to feature_result for quick lookup
+              feature_result_map = {feat['feature']: feat for feat in feature_results}
+              for meter in all_meters:
+                  for feature in (full_feature_list if full_feature_list is not None else feature_result_map.keys()):
+                      feat_result = feature_result_map.get(feature)
+                      condensed = condensed_map.get(feature, feature)
+                      # Track both original and condensed for transparency
+                      if feat_result and meter in feat_result.get('meters', []):
+                          meter_stats[meter]['matched'].append(f"{condensed} (from: {feature})")
+                      else:
+                          meter_stats[meter]['missed'].append(f"{condensed} (from: {feature})")
+                  for meter in all_meters:
+                      meter_stats[meter]['score'] = len(meter_stats[meter]['matched'])
+                      # Try to get a blurb from raw_results
+                      for feat in feature_results:
+                          for r in feat.get('raw_results', []):
+                              meta = r.get('metadata', {})
+                              if meta.get('model_name') == meter or meta.get('meter') == meter or r.get('meter') == meter:
+                                  meter_stats[meter]['blurb'] = meta.get('selection_blurb')
+                                  if meter_stats[meter]['blurb']:
+                                      break
+                          if meter_stats[meter]['blurb']:
+                              break
+              # Print PDF knowledge base info if any meters found
+              if pdf_meters:
+                  report_lines.append("\n[PDF Knowledge Base Used]")
+                  report_lines.append("The following meters/descriptions were retrieved from the PDF knowledge base:")
+                  for m in sorted(pdf_meters):
+                      meta = pdf_meter_details.get(m, {})
+                      blurb = meta.get('selection_blurb') or meta.get('description') or ''
+                      report_lines.append(f"- {m}: {blurb}")
+                  report_lines.append("")
+
+              # Meter ranking table
+              ranked_meters = sorted(meter_stats.items(), key=lambda x: x[1]['score'], reverse=True)
+              top3_meters = ranked_meters[:3]
+              report_lines.append("Top 3 Meter Ranking:")
+              report_lines.append("  Meter        | Score | Compliance | Description")
+              report_lines.append("  ------------ | ----- | ---------- | -----------")
+              total_features = len(full_feature_list) if full_feature_list is not None else len(feature_results)
+              for meter, stat in top3_meters:
+                  compliance = f"{len(stat['matched'])}/{total_features} ({int(100*len(stat['matched'])/total_features) if total_features else 0}%)"
+                  desc = stat['blurb'] if stat['blurb'] else "-"
+                  report_lines.append(f"  {meter:<12} | {stat['score']:^5} | {compliance:^10} | {desc}")
+              # Feature-by-feature compliance matrix for top 3 meters only (show both original and condensed)
+              report_lines.append("\nFeature Compliance Matrix (Top 3 Meters):")
+              meter_names = [m for m, _ in top3_meters]
+              # Markdown table header
+              header = "| Original Requirement" + " "*10 + "| Condensed" + " "*20
+              for m in meter_names:
+                  header += f" | {m:<18}"
+              header += " |"
+              report_lines.append(header)
+              # Markdown separator
+              sep = "|" + "-"*34 + "|" + "-"*28
+              for _ in meter_names:
+                  sep += "|" + "-"*20
+              sep += "|"
+              report_lines.append(sep)
+              # Table rows: print all features from the full feature list (original and condensed)
+              for feature in (full_feature_list if full_feature_list is not None else feature_result_map.keys()):
+                  condensed = condensed_map.get(feature, feature)
+                  if len(condensed) > 60:
+                      display_str = condensed[:57] + '...'
+                  else:
+                      display_str = condensed
+                  orig_display = feature[:60] + ('...' if len(feature) > 60 else '')
+                  row = f"| {orig_display:<34} | {display_str:<28}"
+                  for meter in meter_names:
+                      feat_result = feature_result_map.get(feature)
+                      row += " |      ✔       " if feat_result and meter in feat_result.get('meters', []) else " |      ✖       "
+                  row += " |"
+                  report_lines.append(row)
+              # End of feature compliance matrix
+              # Shortcomings by meter (top 3 only, condensed)
+              report_lines.append("\nShortcomings by Meter (Top 3):")
+              for meter, stat in top3_meters:
+                  if stat['missed']:
+                      report_lines.append(f"- {meter}: Missing [{', '.join(stat['missed'])}]")
+                  else:
+                      report_lines.append(f"- {meter}: None. Fully compliant.")
+              # Recommendation
+              best_fit = top3_meters[0][0] if top3_meters else None
+              best_score = top3_meters[0][1]['score'] if top3_meters else 0
+              fully_compliant = [m for m, stat in top3_meters if not stat['missed']]
+              report_lines.append("\nRecommendation:")
+              if fully_compliant:
+                  report_lines.append(f"- Best-fit: {fully_compliant[0]} (fully compliant)")
+              elif best_fit:
+                  report_lines.append(f"- Best-fit: {best_fit} (score: {best_score})")
+                  if top3_meters[0][1]['missed']:
+                      report_lines.append(f"  Consider relaxing: [{', '.join(top3_meters[0][1]['missed'])}]")
               else:
-                  report_lines.append(f"   - Shortcomings: None. Fully compliant.")
-          report_lines.append("")
-      result = {'report': '\n'.join(report_lines)}
+                  report_lines.append("- No meter meets any requirements.")
+              report_lines.append("")
+          result = {'report': '\n'.join(report_lines)}
 
 outputs:
   - type: "text"

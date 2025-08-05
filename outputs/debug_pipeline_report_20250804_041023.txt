@@ -1,0 +1,32 @@
+=== PIPELINE DEBUG REPORT ===
+
+Document Length: 14018 characters
+Content Preview: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES
+1.20 METERS AND INSTRUMENTS
+The contestable customer meter scheme shall be implemented.
+Meters, instruments and relays for external panel mounting shall b...
+
+Chunks Created: 8
+First Chunk Length: 2000
+First Chunk Preview: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES
+1.20 METERS AND INSTRUMENTS
+The contestable customer meter scheme shall be implemented.
+Meters, instruments and relays for external panel mounting shall be of flush pattern, with square
+escutcheon plates finished matt black. Indicating instruments shall ...
+
+LLM Extraction Results:
+❌ LLM extraction failed
+  - Error: Expecting value: line 1 column 1 (char 0)
+  - Raw output: N/A
+
+Feature Condensation Results:
+✅ Feature condensation successful
+  - Condensed 3 features
+    * 'True RMS current per phase & neutral ±0.5%' → 'RMS current ±0.5%'
+    * 'Operating voltage 400V/230V, 50Hz' → 'voltage 400V/230V 50Hz'
+    * 'Built-in memory ≥ 36 months' → 'memory ≥36 months'
+
+=== RECOMMENDATIONS ===
+1. Check LLM model configuration and API connectivity
+2. Verify document contains technical content
+3. Test with a simpler document first

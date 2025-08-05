@@ -15,7 +15,6 @@ from .template_analyzer import TemplateAnalyzer
 from .file_processor import FileProcessor
 from .llm_processor import LLMProcessor
 from .excel_generator import ExcelGenerator
-from .llamaindex_query_engine import LlamaIndexQueryEngine
 
 # Load environment variables from .env file
 load_dotenv()
@@ -144,8 +143,6 @@ class PromptEngine:
         
         # New: Initialize LlamaIndex query engines
         self.llamaindex_engines = {}
-        
-        # FAISS only: Remove Chroma processor
         
         print("Prompt engine components initialized")
     
@@ -450,7 +447,8 @@ class PromptEngine:
             # Reduced debug output for clarity
             step_name = step['name']
             step_type = step.get('type', '')
-            prompt_template = step.get('prompt_template', '')
+            # Support both 'prompt_template' and 'input' keys for LLM prompts
+            prompt_template = step.get('prompt_template', '') or step.get('input', '')
             dependencies = step.get('dependencies', [])
             timeout = step.get('timeout', 120)
             if llm_model:
@@ -556,6 +554,13 @@ class PromptEngine:
                     reranker = CrossEncoder(model_name)
                     faiss_results = results[step['dependencies'][0]]
                     print(f"[DEBUG] FAISS results for reranker: {faiss_results}")
+                    # PATCH: If faiss_results is a list, skip reranking and pass through
+                    if isinstance(faiss_results, list):
+                        print("[PATCH] FAISS results is a list, skipping reranking and passing through.")
+                        step_result = {'success': True, 'results': faiss_results}
+                        results[step_name] = step_result
+                        continue
+                    # If faiss_results is a dict with 'results', rerank as before
                     reranked_results = {}
                     for req, candidates in faiss_results.get('results', {}).items():
                         if not candidates:

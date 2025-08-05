@@ -1,0 +1,72 @@
+=== Clause: Multi-Function Electronic Meters ===
+
+Requirements:
+- Communication interface RS485, RJ45 or similar socket and plug as Approved
+- Memory capacity for 36 months data
+- Current transformer secondary 5A
+- Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%
+- Voltage range 400V/230V
+- Accuracy class 0.5
+- Frequency ±0.5%
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3355 |   3   | 3/7 (42%)  | The iEM3355 is a high-capacity, 125A direct-measure energy meter with Modbus communication. It offers four-quadrant energy measurement, multi-tariff functions, and a programmable digital I/O, making it suitable for monitoring main switchboards or high-load feeders.
+  EasyLogic PM2220 |   3   | 3/7 (42%)  | The PM2220 is a versatile meter that combines a graphical LCD display with RS-485 communication. It's an excellent choice for networked applications that benefit from enhanced local data visualization and require basic power quality insights, including up to 15th order harmonics and voltage unbalance monitoring.
+  PowerLogic PM8340 |   3   | 3/7 (42%)  | The PM8340 is an advanced power quality meter featuring a high-resolution color display, 512 MB of memory, and a high sampling rate of 512 samples/cycle for detailed analysis. It provides Class A power quality measurement and is suitable for billing and network management in large buildings, data centers, and industrial settings.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | Acti9 iEM3355      | EasyLogic PM2220   | PowerLogic PM8340  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Communication interface RS485, RJ45 or similar socket and... |      ✔        |      ✔        |      ✔        |
+| Memory capacity for 36 months data                           |      ✔        |      ✔        |      ✔        |
+| Current transformer secondary 5A                             |      ✔        |      ✔        |      ✔        |
+| Total Harmonic Distortion (THD) per phase, voltage & curr... |      ✖        |      ✖        |      ✖        |
+| Voltage range 400V/230V                                      |      ✖        |      ✖        |      ✖        |
+| Accuracy class 0.5                                           |      ✖        |      ✖        |      ✖        |
+| Frequency ±0.5%                                              |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3355: Missing [Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5, Frequency ±0.5%]
+- EasyLogic PM2220: Missing [Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5, Frequency ±0.5%]
+- PowerLogic PM8340: Missing [Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5, Frequency ±0.5%]
+
+Recommendation:
+- Best-fit: Acti9 iEM3355 (score: 3)
+  Consider relaxing: [Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5, Frequency ±0.5%]
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data, with user-defined durations
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Records both waveforms and rms plots for rms disturbances
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+- Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  Acti9 iEM3355 |   3   | 3/5 (60%)  | The iEM3355 is a high-capacity, 125A direct-measure energy meter with Modbus communication. It offers four-quadrant energy measurement, multi-tariff functions, and a programmable digital I/O, making it suitable for monitoring main switchboards or high-load feeders.
+  EasyLogic PM2220 |   3   | 3/5 (60%)  | The PM2220 is a versatile meter that combines a graphical LCD display with RS-485 communication. It's an excellent choice for networked applications that benefit from enhanced local data visualization and require basic power quality insights, including up to 15th order harmonics and voltage unbalance monitoring.
+  PowerLogic PM8340 |   3   | 3/5 (60%)  | The PM8340 is an advanced power quality meter featuring a high-resolution color display, 512 MB of memory, and a high sampling rate of 512 samples/cycle for detailed analysis. It provides Class A power quality measurement and is suitable for billing and network management in large buildings, data centers, and industrial settings.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | Acti9 iEM3355      | EasyLogic PM2220   | PowerLogic PM8340  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Stores a trend plot of the rms voltage during the disturb... |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✔        |      ✔        |      ✔        |
+| Records both waveforms and rms plots for rms disturbances    |      ✔        |      ✔        |      ✔        |
+| Triggers on one-cycle or longer variations in the rms vol... |      ✖        |      ✖        |      ✖        |
+| Stores actual waveforms (voltage and current) during the ... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- Acti9 iEM3355: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles]
+- EasyLogic PM2220: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles]
+- PowerLogic PM8340: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles]
+
+Recommendation:
+- Best-fit: Acti9 iEM3355 (score: 3)
+  Consider relaxing: [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles]

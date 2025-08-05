@@ -1,0 +1,45 @@
+=== Clause: Multi-Function Electronic Meters ===
+
+Requirements:
+- Current transformer secondary 5A
+- Memory capacity for 36 months data
+- Frequency ±0.5%
+- Voltage range 400V/230V
+- Communication interface RS485, RJ45 or similar socket and plug as Approved
+- Accuracy class 0.5
+- Total Harmonic Distortion (THD) per phase, voltage & current up to 31st harmonic order ±1%
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Records both waveforms and rms plots for rms disturbances
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Stores actual waveforms (voltage and current) during the disturbance with user-defined pre-event and post-event cycles
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  EasyLogic PM2210 |   3   | 3/5 (60%)  | Select the PM2210 for applications where the enhanced readability of a graphical LCD display is preferred for local monitoring. It serves as the entry-level LCD model, offering basic measurements and a pulse output without advanced communication features.
+  Acti9 iEM3110 |   3   | 3/5 (60%)  | The iEM3110 is a 63A direct-measure energy meter that builds on the basic model by adding a configurable pulse output for remote monitoring of energy consumption. It is suitable for integration with PLCs or other basic data acquisition systems.
+  PowerLogic ION9000T |   3   | 3/5 (60%)  | The PowerLogic ION9000T extends the capabilities of the advanced ION9000 by adding high-speed transient capture. It detects sub-microsecond transients up to 10 kV with a 10 MHz sampling rate, providing unparalleled insight into transient events for mission-critical power systems.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | EasyLogic PM2210   | Acti9 iEM3110      | PowerLogic ION9000T |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Records both waveforms and rms plots for rms disturbances    |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✔        |      ✔        |      ✔        |
+| Stores actual waveforms (voltage and current) during the ... |      ✔        |      ✔        |      ✔        |
+| Triggers on one-cycle or longer variations in the rms vol... |      ✖        |      ✖        |      ✖        |
+| Stores a trend plot of the rms voltage during the disturb... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- EasyLogic PM2210: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined]
+- Acti9 iEM3110: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined]
+- PowerLogic ION9000T: Missing [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined]
+
+Recommendation:
+- Best-fit: EasyLogic PM2210 (score: 3)
+  Consider relaxing: [Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data. Pre-event and post-event durations are user-defined]

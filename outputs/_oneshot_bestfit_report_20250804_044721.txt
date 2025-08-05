@@ -1,0 +1,1 @@
+No meter search results were found. The semantic search did not return any candidates for the extracted requirements. Please check your input data and ensure the database and/or PDF knowledge base are properly indexed.

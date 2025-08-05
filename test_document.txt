@@ -1,0 +1,23 @@
+TECHNICAL SPECIFICATION - POWER METERS
+
+Section 1: Multi-Function Electronic Meters
+The meters shall provide the following measurements:
+- True RMS current per phase & neutral ±0.5%
+- True RMS voltage phase-to-phase & phase-to-neutral ±0.5%
+- Real power (kW) per phase & three-phase total ±0.5%
+- Apparent power (kVA) per phase & three-phase total ±0.5%
+- Reactive power (kVAr) per phase & three-phase total ±0.5%
+- Total power factor per phase & three-phase total ±0.5%
+- Frequency ±0.5%
+
+Section 2: Communication Requirements
+- Front-panel communication port RS485/RJ45
+- Protocol support for Modbus RTU
+- Built-in memory >= 36 months
+
+Section 3: Environmental Specifications
+- Operating temperature up to 50 °C
+- Operating voltage 400 V/230 V, 50 Hz
+- CT secondary 5 A
+- Overcurrent withstand 100 A for 1 s
+- IP2X front face protection

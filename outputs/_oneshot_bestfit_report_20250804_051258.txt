@@ -1,0 +1,52 @@
+=== Clause: 1.20 METERS AND INSTRUMENTS ===
+
+Requirements (Original):
+- Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529
+- Direct reading kWh meter
+- Scale length of 90 degrees with external zero adjustment
+- Accuracy Class 0.5 indicating meters
+- Integrating meters complying with BS 5685
+- Flush pattern meters with square escutcheon plates finished matt black
+
+Requirements (Condensed):
+- Indicating instruments complying with IEC 60051, IEC 61010, IEC 60529
+- KWh meter
+- Scale length of 90 degrees with external zero adjustment
+- Accuracy class 0.5
+- Integrating meters complying with BS 5685
+- Flush pattern meters with square escutcheon plates finished matt black
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                            |
+|----------------------------------|
+
+Shortcomings by Meter (Top 3):
+
+Recommendation:
+- No meter meets any requirements.
+
+
+=== Clause: a) Cross triggering ===
+
+Requirements (Original):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Requirements (Condensed):
+- All disturbances will cause all channels (voltage, current, and any additional channels) to be recorded.
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                            |
+|----------------------------------|
+
+Shortcomings by Meter (Top 3):
+
+Recommendation:
+- No meter meets any requirements.

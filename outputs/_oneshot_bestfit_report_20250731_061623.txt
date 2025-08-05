@@ -1,0 +1,74 @@
+=== Clause: TECHNICAL SPECIFICATION – ELECTRICAL SERVICES ===
+
+Requirements:
+- RS485 communication interface
+- Accuracy class 0.5
+- Total Harmonic Distortion (THD) up to 31st harmonic order ±1%
+- Operating temperature up to 50°C
+- Frequency ±0.5%
+- Voltage range 400V/230V
+- Current transformer secondary 5A
+- Memory capacity for 36 months data
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5331 |   3   | 3/8 (37%)  | The PM5331 is the revenue-certified version of the PM5330, adding MID/MIR compliance for billing applications . It combines Class 0.5S accuracy, expanded I/O (2 DI/2 DO), and serial communication, making it suitable for tenant billing and cost allocation that requires regulatory approval.
+  Acti9 iEM3255 |   3   | 3/8 (37%)  | The iEM3255 is a current transformer (CT) connected energy meter offering high accuracy (Class 0.5S) for billing applications. It provides four-quadrant energy measurement, a digital I/O, multi-tariff functions, and Modbus communication, making it ideal for monitoring mains or critical feeders in low and medium voltage networks.
+  PowerLogic PM8210 |   3   | 3/8 (37%)  | The PM8210 is the low-voltage DC variant of the Standard power meter. It provides comprehensive power quality analysis with a higher sampling rate and more memory than the essential model, and is designed for systems with a 20-60 V DC control power supply.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5331  | Acti9 iEM3255      | PowerLogic PM8210  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| RS485 communication interface                                |      ✔        |      ✔        |      ✔        |
+| Accuracy class 0.5                                           |      ✔        |      ✔        |      ✔        |
+| Total Harmonic Distortion (THD) up to 31st harmonic order... |      ✔        |      ✔        |      ✔        |
+| Operating temperature up to 50°C                             |      ✖        |      ✖        |      ✖        |
+| Frequency ±0.5%                                              |      ✖        |      ✖        |      ✖        |
+| Voltage range 400V/230V                                      |      ✖        |      ✖        |      ✖        |
+| Current transformer secondary 5A                             |      ✖        |      ✖        |      ✖        |
+| Memory capacity for 36 months data                           |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5331: Missing [Operating temperature up to 50°C, Frequency ±0.5%, Voltage range 400V/230V, Current transformer secondary 5A, Memory capacity for 36 months data]
+- Acti9 iEM3255: Missing [Operating temperature up to 50°C, Frequency ±0.5%, Voltage range 400V/230V, Current transformer secondary 5A, Memory capacity for 36 months data]
+- PowerLogic PM8210: Missing [Operating temperature up to 50°C, Frequency ±0.5%, Voltage range 400V/230V, Current transformer secondary 5A, Memory capacity for 36 months data]
+
+Recommendation:
+- Best-fit: PowerLogic PM5331 (score: 3)
+  Consider relaxing: [Operating temperature up to 50°C, Frequency ±0.5%, Voltage range 400V/230V, Current transformer secondary 5A, Memory capacity for 36 months data]
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Records both waveforms and rms plots for rms disturbances
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data, with user-defined durations
+- Stores actual waveforms (voltage and current) during the disturbance, including user-defined pre-event and post-event cycles
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5331 |   3   | 3/5 (60%)  | The PM5331 is the revenue-certified version of the PM5330, adding MID/MIR compliance for billing applications . It combines Class 0.5S accuracy, expanded I/O (2 DI/2 DO), and serial communication, making it suitable for tenant billing and cost allocation that requires regulatory approval.
+  Acti9 iEM3255 |   3   | 3/5 (60%)  | The iEM3255 is a current transformer (CT) connected energy meter offering high accuracy (Class 0.5S) for billing applications. It provides four-quadrant energy measurement, a digital I/O, multi-tariff functions, and Modbus communication, making it ideal for monitoring mains or critical feeders in low and medium voltage networks.
+  PowerLogic PM8210 |   3   | 3/5 (60%)  | The PM8210 is the low-voltage DC variant of the Standard power meter. It provides comprehensive power quality analysis with a higher sampling rate and more memory than the essential model, and is designed for systems with a 20-60 V DC control power supply.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5331  | Acti9 iEM3255      | PowerLogic PM8210  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Records both waveforms and rms plots for rms disturbances    |      ✔        |      ✔        |      ✔        |
+| Stores a trend plot of the rms voltage during the disturb... |      ✔        |      ✔        |      ✔        |
+| Stores actual waveforms (voltage and current) during the ... |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✖        |      ✖        |      ✖        |
+| Triggers on one-cycle or longer variations in the rms vol... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5331: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+- Acti9 iEM3255: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+- PowerLogic PM8210: Missing [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]
+
+Recommendation:
+- Best-fit: PowerLogic PM5331 (score: 3)
+  Consider relaxing: [Characterizes rms disturbances according to IEC 61000-4-30 requirements, Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents]

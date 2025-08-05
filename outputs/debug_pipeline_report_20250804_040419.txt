@@ -1,0 +1,22 @@
+=== PIPELINE DEBUG REPORT ===
+
+Document Length: 49 characters
+Content Preview: [PDF processing failed: pdfplumber not installed]...
+
+Chunks Created: 1
+First Chunk Length: 49
+First Chunk Preview: [PDF processing failed: pdfplumber not installed]...
+
+LLM Extraction Results:
+❌ LLM extraction failed
+  - Error: Expecting value: line 1 column 1 (char 0)
+  - Raw output: N/A
+
+Feature Condensation Results:
+❌ Feature condensation failed
+  - Error: Expecting value: line 1 column 1 (char 0)
+
+=== RECOMMENDATIONS ===
+1. Check LLM model configuration and API connectivity
+2. Verify document contains technical content
+3. Test with a simpler document first

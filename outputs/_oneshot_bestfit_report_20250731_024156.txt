@@ -1,0 +1,72 @@
+=== Clause: 1.20.4 Multi-Function Electronic Meters ===
+
+Requirements:
+- Current transformer secondary 5A
+- Memory capacity for 36 months data
+- Communication interface RS485, RJ45 or similar socket and plug
+- Total Harmonic Distortion (THD) up to 31st harmonic order ±1%
+- Voltage range 400V/230V
+- Accuracy class 0.5%
+- Frequency ±0.5% Hz
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5330 |   3   | 3/7 (42%)  | The PM5330 builds upon the PM5310 by offering expanded I/O capabilities, including 2 digital inputs and 2 digital outputs , along with a serial port. This makes it suitable for applications requiring basic control or status monitoring in addition to energy metering.
+  EasyLogic PM2230 |   3   | 3/7 (42%)  | The PM2230 is the premium model in the series, ideal for critical applications such as sub-billing and advanced power quality analysis. It should be selected when the highest accuracy (Class 0.5S) , detailed harmonic analysis (up to 31st) , data logging, alarming, multi-tariff functions , and I/O expandability  are required.
+  PowerLogic PM5100 |   3   | 3/7 (42%)  | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5330  | EasyLogic PM2230   | PowerLogic PM5100  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Current transformer secondary 5A                             |      ✔        |      ✔        |      ✔        |
+| Memory capacity for 36 months data                           |      ✔        |      ✔        |      ✔        |
+| Communication interface RS485, RJ45 or similar socket and... |      ✔        |      ✔        |      ✔        |
+| Total Harmonic Distortion (THD) up to 31st harmonic order... |      ✖        |      ✖        |      ✖        |
+| Voltage range 400V/230V                                      |      ✖        |      ✖        |      ✖        |
+| Accuracy class 0.5%                                          |      ✖        |      ✖        |      ✖        |
+| Frequency ±0.5% Hz                                           |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5330: Missing [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5%, Frequency ±0.5% Hz]
+- EasyLogic PM2230: Missing [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5%, Frequency ±0.5% Hz]
+- PowerLogic PM5100: Missing [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5%, Frequency ±0.5% Hz]
+
+Recommendation:
+- Best-fit: PowerLogic PM5330 (score: 3)
+  Consider relaxing: [Total Harmonic Distortion (THD) up to 31st harmonic order ±1%, Voltage range 400V/230V, Accuracy class 0.5%, Frequency ±0.5% Hz]
+
+
+=== Clause: RMS Disturbances ===
+
+Requirements:
+- Triggers on one-cycle or longer variations in the rms voltage level outside user-defined thresholds for both voltages (L-N and L-L) and currents
+- Characterizes rms disturbances according to IEC 61000-4-30 requirements
+- User-defined pre-event and post-event durations for trend plot
+- Records both waveforms and rms plots for rms disturbances
+- Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data
+
+Top 3 Meter Ranking:
+  Meter        | Score | Compliance | Description
+  ------------ | ----- | ---------- | -----------
+  PowerLogic PM5330 |   3   | 3/5 (60%)  | The PM5330 builds upon the PM5310 by offering expanded I/O capabilities, including 2 digital inputs and 2 digital outputs , along with a serial port. This makes it suitable for applications requiring basic control or status monitoring in addition to energy metering.
+  EasyLogic PM2230 |   3   | 3/5 (60%)  | The PM2230 is the premium model in the series, ideal for critical applications such as sub-billing and advanced power quality analysis. It should be selected when the highest accuracy (Class 0.5S) , detailed harmonic analysis (up to 31st) , data logging, alarming, multi-tariff functions , and I/O expandability  are required.
+  PowerLogic PM5100 |   3   | 3/5 (60%)  | The PM5100 is a panel-mounted power meter with a backlit LCD display, providing Class 0.5S accuracy for basic power and energy metering, including power quality analysis up to the 15th harmonic. It is suitable for applications that do not require serial communication but need a digital output for energy pulsing.
+
+Feature Compliance Matrix (Top 3 Meters):
+| Feature                             | PowerLogic PM5330  | EasyLogic PM2230   | PowerLogic PM5100  |
+|----------------------------------|--------------------|--------------------|--------------------|
+| Triggers on one-cycle or longer variations in the rms vol... |      ✔        |      ✔        |      ✔        |
+| Characterizes rms disturbances according to IEC 61000-4-3... |      ✔        |      ✔        |      ✔        |
+| User-defined pre-event and post-event durations for trend... |      ✔        |      ✔        |      ✔        |
+| Records both waveforms and rms plots for rms disturbances    |      ✖        |      ✖        |      ✖        |
+| Stores a trend plot of the rms voltage during the disturb... |      ✖        |      ✖        |      ✖        |
+
+Shortcomings by Meter (Top 3):
+- PowerLogic PM5330: Missing [Records both waveforms and rms plots for rms disturbances, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data]
+- EasyLogic PM2230: Missing [Records both waveforms and rms plots for rms disturbances, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data]
+- PowerLogic PM5100: Missing [Records both waveforms and rms plots for rms disturbances, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data]
+
+Recommendation:
+- Best-fit: PowerLogic PM5330 (score: 3)
+  Consider relaxing: [Records both waveforms and rms plots for rms disturbances, Stores a trend plot of the rms voltage during the disturbance, including at least 5 cycles of pre-trigger data and 25 cycles of post-event data]
